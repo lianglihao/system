@@ -17,10 +17,14 @@ export default {
 
 <style scoped>
 .home {
-
+  height: 100vh;
+  width: 100%;
+  /* background-color:transparent; */
+  /* opacity: 0.7; */
+  background: rgba(0,0,0,0.5);
 }
 .content {
-  background-image: url(../assets/ALT2.jpg);
+  background-image: url(../assets/login_bg.jpg);
   position:fixed;
   top: 0;
   left: 0;
@@ -36,4 +40,6 @@ export default {
   -o-background-size: cover;
   background-position: center 0;
 }
+@media screen and (min-width:320px) and (max-width:1023px){
+  .mob-hidden{display:none;}}
 </style>
