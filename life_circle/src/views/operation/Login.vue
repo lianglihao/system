@@ -15,8 +15,10 @@
         <div class="login-middle-title">
           <h1>记录学习、记录美好生活</h1>
         </div>
-        <div class="loginform"></div>
-        <div class="registform"></div>
+        <div class="loginregist">
+          <div class="loginform"></div>
+          <div class="registform" :class="registclass"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -32,15 +34,18 @@ export default {
   },
   data() {
     return {
-      LoginRegistration: '注册'
+      LoginRegistration: '注册',
+      registclass: ''
     }
   },
   methods: {
     change() {
       if(this.LoginRegistration == '注册'){
         this.LoginRegistration = '登录';
+        this.registclass = 'addRegister'
       }else{
         this.LoginRegistration = '注册';
+        this.registclass = 'removeRegister'
       }
     }
   }
@@ -156,7 +161,6 @@ a:hover {
 .login-middle {
   height: 500px;
   width: 80%;
-  background: rgba(123, 100, 200, 0.2);
   z-index: 100;
   position: absolute;
   left: 50%;
@@ -184,15 +188,34 @@ a:hover {
       font-size: 1.5rem;
     }
 }
+.loginregist {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 80%;
+  background: rgba(123, 100, 200, 0.2);
+  margin: 0 auto;
+}
 .loginform {
+  position: absolute;
   width: 100px;
   height: 100px;
   background-color: black;
 }
 .registform {
+  position: absolute;
+  left: -100px;
   width: 100px;
   height: 100px;
   background-color: blue;
-  display: none;
+  /* display: none; */
+}
+.addRegister {
+  transform: translateX(100px);
+  transition: transform 0.4s;
+}
+.removeRegister {
+  transform: translateX(0);
+  transition: transform 0.4s;
 }
 </style>
