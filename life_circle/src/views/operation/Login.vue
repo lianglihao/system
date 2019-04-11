@@ -16,8 +16,35 @@
           <h1>记录学习、记录美好生活</h1>
         </div>
         <div class="loginregist">
-          <div class="loginform"></div>
-          <div class="registform" :class="registclass"></div>
+          <div class="loginform">
+            <form class="formlogin" @submit.prevent="login" autocomplete="off">
+              <div class="formlogin-uname">
+                <input type="text" placeholder="账号" auto-complete="new-password">
+              </div>
+              <div class="formlogin-upassword">
+                <input type="password" placeholder="密码" auto-complete="new-password">
+              </div>
+              <div class="rememberforget">
+                <div class="chance">
+                  <input :checked="checked" type="radio" name="remember" id="rememberme" @click="chanceRemember">
+                  <label for="rememberme">记住我</label>
+                </div>
+                <div class="forget">
+                  <router-link :to="{path:'/author/aboutauthor'}">忘记密码?</router-link>
+                </div>
+              </div>
+              <button class="loginButton">
+                <span>登录</span>
+                <img src="../../assets/go.png" alt="">
+              </button>
+            </form>
+          </div>
+          <div class="registform" :class="registclass">
+            <form class="formregist" @submit.prevent="regist" autocomplete="off">
+              <input type="text">
+              <input type="password">
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -35,7 +62,8 @@ export default {
   data() {
     return {
       LoginRegistration: '注册',
-      registclass: ''
+      registclass: '',
+      checked: false
     }
   },
   methods: {
@@ -47,6 +75,16 @@ export default {
         this.LoginRegistration = '注册';
         this.registclass = 'removeRegister'
       }
+    },
+    chanceRemember() {
+      if(this.checked == false){
+        this.checked = true
+      }else if(this.checked == true) {
+        this.checked = false
+      }
+    },
+    login() {
+      console.log(1)
     }
   }
 }
@@ -124,6 +162,8 @@ a:hover {
 .left img {
   height: 2rem;
   width: 2rem;
+  animation: App-logo infinite 20s linear;
+  /* linear保持速度一致 */
 }
 .left {
   width: 9.5rem;
@@ -177,45 +217,275 @@ a:hover {
   width: 100%;
   background-position: center 0; */
   text-align: center;
+  margin-bottom: 40px;
 }
 .login-middle-title h1 {
   color: white;
   font-weight: 600;
   font-size: 3rem;
 }
-@media screen and (max-width: 414px) {
-    .login-middle-title h1 {
-      font-size: 1.5rem;
-    }
-}
 .loginregist {
   position: relative;
   overflow: hidden;
   height: 100%;
   width: 80%;
-  background: rgba(123, 100, 200, 0.2);
+  /* background: rgba(123, 100, 200, 0.2); */
   margin: 0 auto;
 }
 .loginform {
   position: absolute;
-  width: 100px;
-  height: 100px;
-  background-color: black;
+  width: 100%;
+  height: 100%;
+  /* background-color: black; */
 }
 .registform {
   position: absolute;
-  left: -100px;
-  width: 100px;
-  height: 100px;
+  bottom: -100%;
+  width: 100%;
+  height: 100%;
   background-color: blue;
   /* display: none; */
 }
 .addRegister {
-  transform: translateX(100px);
+  transform: translateY(-100%);
   transition: transform 0.4s;
 }
 .removeRegister {
-  transform: translateX(0);
+  transform: translateY(0);
   transition: transform 0.4s;
+}
+.formlogin {
+  height: 100%;
+  width: 60%;
+  margin: 0 auto;
+  text-align: center;
+}
+/* .formlogin input {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  color: #fff;
+  background-color: rgba(255,255,255,.3);
+  border: 1px solid #fff;
+  border-radius: 3px;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
+} */
+.formlogin input:focus{
+  background-color: #fff;
+  color: black;
+}
+.formlogin-uname {
+  text-align: center;
+}
+.formlogin-uname input{
+  margin-bottom: 20px;
+  width: 80%;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  color: #fff;
+  background-color: rgba(255,255,255,.3);
+  border: 1px solid #fff;
+  border-radius: 3px;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
+}
+.formlogin-upassword {
+  text-align: center;
+}
+.formlogin-upassword input{
+  margin-bottom: 20px;
+  width: 80%;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  color: #fff;
+  background-color: rgba(255,255,255,.3);
+  border: 1px solid #fff;
+  border-radius: 3px;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
+}
+.formregist {
+  height: 100%;
+  width: 60%;
+  margin: 0 auto;
+}
+.formregist input {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  color: #fff;
+  background-color: rgba(255,255,255,.3);
+  border: 1px solid #fff;
+  border-radius: 3px;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
+}
+.formregist input:focus{
+  background-color: #fff;
+  color: black;
+}
+ /* WebKit browsers */
+input:focus::-webkit-input-placeholder { color:transparent; }
+/* Mozilla Firefox 4 to 18 */
+input:focus:-moz-placeholder { color:transparent; }
+/* Mozilla Firefox 19+ */
+input:focus::-moz-placeholder { color:transparent; }
+/* Internet Explorer 10+ */
+input:focus:-ms-input-placeholder { color:transparent; }
+ /* WebKit browsers */
+input::-webkit-input-placeholder { color:#fff; }
+/* Mozilla Firefox 4 to 18 */
+input:-moz-placeholder { color:#fff; }
+/* Mozilla Firefox 19+ */
+input::-moz-placeholder { color:#fff; }
+/* Internet Explorer 10+ */
+input:-ms-input-placeholder { color:#fff; }
+.rememberforget {
+  width: 80%;
+  height: 40px;
+  margin-left: 10%;
+  /* background: red; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+  color: #fff;
+}
+.chance input {
+  vertical-align: middle;
+}
+.chance label {
+  vertical-align: middle;
+  margin-left: 5px;
+}
+.loginButton {
+  display: block;
+  position: relative;
+  width: 80%;
+  margin-left: 10%;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 30px;
+  border: 0;
+  background: #00B4FF;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: "Helvetica Neue","Hiragino Sans GB","Microsoft Yahei","WenQuanYi Micro Hei",sans-serif;
+  outline: none;
+}
+span {
+  display: inline;
+}
+.loginButton img {
+  position: absolute;
+  top: 30%;
+  vertical-align: middle;
+  height: 1rem;
+  width: 1rem;
+}
+.loginButton:hover img {
+  /* transform: translateX(100%);
+  transition: transform 0.4s; */
+  animation:myloginmove 3s infinite; /* infinite无限循环 */
+  -moz-animation:myloginmove 3s infinite; /* Firefox */
+  -webkit-animation:myloginmove 3s infinite; /* Safari and Chrome */
+  -o-animation:myloginmove 3s infinite; /* Opera */
+}
+@keyframes myloginmove {
+  0%   {transform: translateX(0%);}
+  50%  {transform: translateX(200%);}
+  100% {transform: translateX(0%);}
+  /* from{transform: translateX(0%);}
+  to{transform: translateX(100%);} */
+}
+
+@-moz-keyframes myloginmove /* Firefox */{
+  0%   {transform: translateX(0%);}
+  50%  {transform: translateX(200%);}
+  100% {transform: translateX(0%);}
+}
+
+@-webkit-keyframes myloginmove /* Safari and Chrome */{
+  0%   {transform: translateX(0%);}
+  50%  {transform: translateX(200%);}
+  100% {transform: translateX(0%);}
+}
+
+@-o-keyframes myloginmove /* Opera */{
+  0%   {transform: translateX(0%);}
+  50%  {transform: translateX(200%);}
+  100% {transform: translateX(0%);}
+}
+@keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media screen and (max-width: 414px) {
+    .login-middle-title h1 {
+      font-size: 1.5rem;
+    }
+    .formlogin {
+      width: 100%;
+    }
 }
 </style>
