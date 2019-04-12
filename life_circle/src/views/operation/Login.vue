@@ -16,7 +16,7 @@
           <h1>记录学习、记录美好生活</h1>
         </div>
         <div class="loginregist">
-          <div class="loginform">
+          <div class="loginform" :class="loginclass">
             <form class="formlogin" @submit.prevent="login" autocomplete="off">
               <div class="formlogin-uname">
                 <input type="text" placeholder="账号" auto-complete="new-password">
@@ -41,28 +41,48 @@
           </div>
           <div class="registform" :class="registclass">
             <form class="formregist" @submit.prevent="regist" autocomplete="off">
-              <input type="text">
-              <input type="password">
+              <div class="formregist-uname">
+                <input type="text" placeholder="用户名" auto-complete="new-password">
+              </div>
+              <div class="formregist-uname">
+                <input type="text" placeholder="账号" auto-complete="new-password">
+              </div>
+              <div class="formregist-upassword">
+                <input type="password" placeholder="密码" auto-complete="new-password">
+              </div>
+              <button class="loginButton">
+                <span>注册</span>
+                <img src="../../assets/go.png" alt="">
+              </button>
             </form>
           </div>
         </div>
+        <div class="brief_introduction">
+          <p>Record Learning, Record Good Life</p>
+          <p>分享学习乐趣</p>
+          <p>分享生活的点滴</p>
+          <p>「Life_Circle」</p>
+        </div>
       </div>
+      <myfooter></myfooter>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import myfooter from '@/components/myFooter'
 
 export default {
   name: 'Login',
   components: {
-    
+    myfooter: myfooter
   },
   data() {
     return {
       LoginRegistration: '注册',
       registclass: '',
+      loginclass: '',
       checked: false
     }
   },
@@ -70,10 +90,12 @@ export default {
     change() {
       if(this.LoginRegistration == '注册'){
         this.LoginRegistration = '登录';
-        this.registclass = 'addRegister'
+        this.registclass = 'addRegister';
+        this.loginclass = 'removeLogin';
       }else{
         this.LoginRegistration = '注册';
-        this.registclass = 'removeRegister'
+        this.registclass = 'removeRegister';
+        this.loginclass = 'addLogin';
       }
     },
     chanceRemember() {
@@ -217,7 +239,7 @@ a:hover {
   width: 100%;
   background-position: center 0; */
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 5%;
 }
 .login-middle-title h1 {
   color: white;
@@ -227,7 +249,7 @@ a:hover {
 .loginregist {
   position: relative;
   overflow: hidden;
-  height: 100%;
+  height: 45%;
   width: 80%;
   /* background: rgba(123, 100, 200, 0.2); */
   margin: 0 auto;
@@ -243,7 +265,7 @@ a:hover {
   bottom: -100%;
   width: 100%;
   height: 100%;
-  background-color: blue;
+  /* background: rgba(123, 100, 200, 0.2); 测试用*/
   /* display: none; */
 }
 .addRegister {
@@ -254,30 +276,22 @@ a:hover {
   transform: translateY(0);
   transition: transform 0.4s;
 }
+.addLogin {
+  /* opacity: 1; */
+  transform: translateY(0);
+  transition: all 0.5s;
+}
+.removeLogin {
+  /* opacity: 0; */
+  transform: translateY(-100%);
+  transition: all 0.5s;
+}
 .formlogin {
   height: 100%;
   width: 60%;
   margin: 0 auto;
   text-align: center;
 }
-/* .formlogin input {
-  width: 100%;
-  height: 40px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  outline: none;
-  color: #fff;
-  background-color: rgba(255,255,255,.3);
-  border: 1px solid #fff;
-  border-radius: 3px;
-  -webkit-transition: all .3s;
-  -moz-transition: all .3s;
-  -ms-transition: all .3s;
-  -o-transition: all .3s;
-  transition: all .3s;
-} */
 .formlogin input:focus{
   background-color: #fff;
   color: black;
@@ -330,9 +344,18 @@ a:hover {
   height: 100%;
   width: 60%;
   margin: 0 auto;
+  text-align: center;
 }
-.formregist input {
-  width: 100%;
+.formregist input:focus{
+  background-color: #fff;
+  color: black;
+}
+.formregist-uname {
+  text-align: center;
+}
+.formregist-uname input{
+  margin-bottom: 20px;
+  width: 80%;
   height: 40px;
   margin-bottom: 20px;
   font-size: 14px;
@@ -349,9 +372,27 @@ a:hover {
   -o-transition: all .3s;
   transition: all .3s;
 }
-.formregist input:focus{
-  background-color: #fff;
-  color: black;
+.formregist-upassword {
+  text-align: center;
+}
+.formregist-upassword input{
+  margin-bottom: 20px;
+  width: 80%;
+  height: 40px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  color: #fff;
+  background-color: rgba(255,255,255,.3);
+  border: 1px solid #fff;
+  border-radius: 3px;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s;
 }
  /* WebKit browsers */
 input:focus::-webkit-input-placeholder { color:transparent; }
@@ -480,11 +521,21 @@ span {
     transform: rotate(360deg);
   }
 }
+.brief_introduction {
+  margin-top: 2rem;
+  height: 2rem;
+  width: 100%;
+  color: #fff;
+  text-align: center;
+}
 @media screen and (max-width: 414px) {
     .login-middle-title h1 {
       font-size: 1.5rem;
     }
     .formlogin {
+      width: 100%;
+    }
+    .formregist {
       width: 100%;
     }
 }
