@@ -72,6 +72,7 @@
 <script>
 // @ is an alias to /src
 import myfooter from '@/components/myFooter'
+import { Userlogin,Userregistration } from '@/api/axios/utils'
 
 export default {
   name: 'Login',
@@ -106,7 +107,10 @@ export default {
       }
     },
     login() {
-      console.log(1)
+      Userlogin()
+    },
+    regist() {
+      Userregistration()
     }
   }
 }
