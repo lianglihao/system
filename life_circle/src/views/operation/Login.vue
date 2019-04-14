@@ -11,6 +11,12 @@
           <h1><router-link :to="{path:'/author/aboutauthor'}">关于作者</router-link></h1>
         </div>
       </div>
+      <div class="external-headprompt">
+        <div class="headprompt" :class="{headpromptdisplay:headpromptIsDisplay}">
+          <span>{{headpromptMsg}}</span>
+          <button @click="closeHeadprompt">X</button>
+        </div>
+      </div>
       <div class="login-middle">
         <div class="login-middle-title">
           <h1>记录学习、记录美好生活</h1>
@@ -19,10 +25,10 @@
           <div class="loginform" :class="loginclass">
             <form class="formlogin" @submit.prevent="login" autocomplete="off">
               <div class="formlogin-uname">
-                <input type="text" placeholder="账号" auto-complete="new-password">
+                <input ref="loginUname" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" v-model="loginUname" type="text" placeholder="账号" auto-complete="new-password">
               </div>
               <div class="formlogin-upassword">
-                <input type="password" placeholder="密码" auto-complete="new-password">
+                <input ref="loginUpassword" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" v-model="loginUpassword" type="password" placeholder="密码" auto-complete="new-password">
               </div>
               <div class="rememberforget">
                 <div class="chance">
@@ -33,24 +39,25 @@
                   <router-link :to="{path:'/author/aboutauthor'}">忘记密码?</router-link>
                 </div>
               </div>
-              <button class="loginButton">
+              <button :style="loginBtn" class="loginButton" :class="loginLoding" :disabled="disabled">
                 <span>登录</span>
-                <img src="../../assets/go.png" alt="">
+                <!-- <img src="../../assets/go.png" alt=""> -->
+                <img src="../../assets/go.png" alt="" >
               </button>
             </form>
           </div>
           <div class="registform" :class="registclass">
             <form class="formregist" @submit.prevent="regist" autocomplete="off">
               <div class="formregist-uname">
-                <input type="text" placeholder="用户名" auto-complete="new-password">
+                <input onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" type="text" placeholder="用户名" auto-complete="new-password">
               </div>
-              <div class="formregist-uname">
+              <div onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" class="formregist-uname">
                 <input type="text" placeholder="账号" auto-complete="new-password">
               </div>
               <div class="formregist-upassword">
-                <input type="password" placeholder="密码" auto-complete="new-password">
+                <input onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" type="password" placeholder="密码" auto-complete="new-password">
               </div>
-              <button class="loginButton">
+              <button class="loginButton" :class="registLoding">
                 <span>注册</span>
                 <img src="../../assets/go.png" alt="">
               </button>
@@ -82,9 +89,20 @@ export default {
   data() {
     return {
       LoginRegistration: '注册',
+      headpromptIsDisplay: false,
+      headpromptMsg: '',
+      disabled: false,
       registclass: '',
+      registLoding: '',
       loginclass: '',
-      checked: false
+      loginLoding: '',
+      loginBtn: {
+        backgroundColor: '',
+        opacity: ''
+      },
+      checked: false,
+      loginUname: '',
+      loginUpassword: '',
     }
   },
   methods: {
@@ -107,16 +125,102 @@ export default {
       }
     },
     login() {
-      Userlogin()
+      if(this.loginUname == '' || this.loginUpassword == ''){
+        this.headpromptIsDisplay = true;
+        this.headpromptMsg = 'account or password cannot be empty.';
+        if(this.loginUname == '') {
+          this.$refs.loginUname.focus();
+          //配合input标签ref属性使用
+        }else if(this.loginUname != '' && this.loginUpassword == '') {
+          this.$refs.loginUpassword.focus();
+        }
+      }else {
+        this.disabled = true;
+        this.loginLoding = 'loginLoding';
+        this.loginBtn.opacity = '0.9';
+        this.loginBtn.backgroundColor = '#72d4fd';
+        Userlogin(this.loginUname,this.loginUpassword).then( res => {
+          if(res == true) {
+            this.$router.push({name:"home"});
+          }else {
+            this.headpromptIsDisplay = true;
+            this.headpromptMsg = 'Incorrect username or password.';
+            this.disabled = false;
+            this.loginLoding = '';
+            this.loginBtn.opacity = '';
+            this.loginBtn.backgroundColor = '';
+            console.log('登录失败');
+          }
+        },error => {
+          console.log(error);
+          this.disabled = false;
+          this.loginLoding = '';
+          this.loginBtn.opacity = '';
+          this.loginBtn.backgroundColor = '';
+        })
+      }
     },
     regist() {
       Userregistration()
+    },
+    closeHeadprompt() {
+      this.headpromptIsDisplay = false;
+    }
+  },
+  watch: {
+    headpromptIsDisplay: function() {
+      if(this.headpromptIsDisplay == true) {
+        setTimeout( () => {
+          this.headpromptIsDisplay = false;
+        },2000)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.external-headprompt {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: 10%;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  overflow: hidden;
+}
+.headprompt {
+  padding-left: 10px; 
+  box-sizing: border-box;
+  position: absolute;
+  height: 40px;
+  background-color: #ffdce0;
+  color: #86181d;
+  font-size: 0.8rem;
+  line-height: 40px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ffdce0;
+  overflow: hidden;
+  transform: translateY(-100%);
+}
+.headprompt button {
+  /* margin-left: 7%; */
+  outline: none;
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  border: none;
+  color: #86181da6
+}
+.headprompt button:hover {
+  color: #86181d;
+}
+.headpromptdisplay {
+  transform: translateY(0);
+  transition: transform 0.6s;
+}
 .login {
   height: 100vh;
   width: 100%;
@@ -275,20 +379,27 @@ a:hover {
 .addRegister {
   transform: translateY(-100%);
   transition: transform 0.4s;
+  opacity: 1;
+  visibility: visible;
+  /* 设置元素是否可见，如果采用display:none的话会直接消失闪烁 */
 }
 .removeRegister {
   transform: translateY(0);
   transition: transform 0.4s;
+  opacity: 1;
+  visibility: hidden;
 }
 .addLogin {
-  /* opacity: 1; */
   transform: translateY(0);
   transition: all 0.5s;
+  opacity: 1;
+  visibility: visible;
 }
 .removeLogin {
-  /* opacity: 0; */
   transform: translateY(-100%);
   transition: all 0.5s;
+  opacity: 1;
+  visibility: hidden;
 }
 .formlogin {
   height: 100%;
@@ -531,6 +642,15 @@ span {
   width: 100%;
   color: #fff;
   text-align: center;
+}
+.loginLoding span::after{
+  content: '中...';
+}
+.loginLoding img{
+  display: none;
+}
+.loginLoding:hover{
+  cursor: wait;
 }
 @media screen and (max-width: 414px) {
     .login-middle-title h1 {
