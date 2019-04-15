@@ -42,4 +42,9 @@ header {
     line-height: 1.5;
     padding: 1rem;
 }
+@media (max-width: 1012px){
+    header {
+        padding: 1rem 2rem;
+    }
+}
 </style>
