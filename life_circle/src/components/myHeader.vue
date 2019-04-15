@@ -60,10 +60,9 @@ export default {
     display: -webkit-flex;
     flex-direction: row;
 }
-.head-logo .menu {
-    /* position: absolute;
-    right: 0; */
-}
+/* .head-logo .menu {
+    
+} */
 .head-logo img {
     height: 2rem;
     width: 2rem;
