@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { resolve } from 'path';
-import { reject } from 'q';
 var JMZF = ['x','y','z','a','b','c','d','e','f']
 //用于加密传输，自己想的一个笨拙的方法，随机发送下文可见，后端解密，当前加密传输第二次将失效
 export function Userlogin(uname,upassword) {
@@ -23,6 +21,10 @@ export function Userlogin(uname,upassword) {
                 return users.AccountNumber === uname && users.password === upassword
             })
             if(result != null && result.length >0 ){
+                localStorage.setItem('isLogin','isLogin');
+                localStorage.setItem('uname',result[0].username);
+                localStorage.setItem('headimg',result[0].Head_portrait);
+                localStorage.setItem('accountnumber',result[0].AccountNumber);
                 resolve(true);
             }else {
                 resolve(false);

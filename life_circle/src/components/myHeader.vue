@@ -13,15 +13,15 @@
             </div>
             <div class="link-top"></div>
             <nav class="head-item-nav">
-                <router-link :to="{name:'login'}">
+                <router-link :to="{path:'/author/aboutauthor'}">
                     关于作者
                 </router-link>
                 <div class="link-top"></div>
-                <router-link :to="{name:'login'}">
+                <router-link :to="{path:'/author/aboutauthor'}">
                     关于作者
                 </router-link>
                 <div class="link-top"></div>
-                <router-link :to="{name:'login'}">
+                <router-link :to="{path:'/author/aboutauthor'}">
                     关于作者
                 </router-link>
                 <div class="link-top"></div>
@@ -35,7 +35,7 @@
                 </router-link>
             </div>
             <div class="link-top"></div>
-            <button class="signout">退出登录</button>
+            <button class="signout" @click="signout">退出登录</button>
         </div>
     </div>
 </template>
@@ -45,8 +45,9 @@ export default {
     name: 'myheader',
     data() {
         return {
-            headimg: require('../assets/draw.png'),//引入图片
-            uname: 'lianglihao',
+            // headimg: require('../assets/draw.png'),//引入图片
+            headimg: localStorage.getItem('headimg'),
+            uname: localStorage.getItem('uname'),
             display: true
         }
     },
@@ -54,11 +55,17 @@ export default {
         changeDisplay() {
             if(this.display == true) {
                 this.display = false;
-                console.log(this.display)
+                // console.log(this.display)
             }else {
                 this.display = true;
-                console.log(this.display)
+                // console.log(this.display)
             }
+        },
+        signout() {
+            localStorage.removeItem('isLogin');
+            localStorage.removeItem('uname');
+            localStorage.removeItem('headimg');
+            this.$router.replace({name:"login"});
         }
     }
 }

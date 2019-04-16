@@ -101,7 +101,7 @@ export default {
         opacity: ''
       },
       checked: false,
-      loginUname: '',
+      loginUname: localStorage.getItem('accountnumber'),
       loginUpassword: '',
     }
   },
@@ -141,7 +141,8 @@ export default {
         this.loginBtn.backgroundColor = '#72d4fd';
         Userlogin(this.loginUname,this.loginUpassword).then( res => {
           if(res == true) {
-            this.$router.push({name:"home"});
+            // console.log(1);
+            this.$router.replace({name:"home"});
           }else {
             this.headpromptIsDisplay = true;
             this.headpromptMsg = 'Incorrect username or password.';
@@ -175,7 +176,15 @@ export default {
         },2000)
       }
     }
-  }
+  },
+  beforeRouteEnter:(to,from,next) => {
+      var isLogin = localStorage.getItem("isLogin")
+      if(isLogin == "isLogin"){
+          next('/');
+      }else{
+          next();
+      }
+  },
 }
 </script>
 
