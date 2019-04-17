@@ -53,12 +53,15 @@ export default {
     },
     methods: {
         changeDisplay() {
+            var that = this;
             if(this.display == true) {
                 this.display = false;
                 // console.log(this.display)
+                this.$emit('headhanbao',that.display);
             }else {
                 this.display = true;
                 // console.log(this.display)
+                this.$emit('headhanbao',that.display);
             }
         },
         signout() {
@@ -114,10 +117,13 @@ export default {
     color: #fff;
     text-indent: 0.4rem;
     margin-right: 1rem;
+    transition: width 0.5s;
 }
 .head-item .searchinput input:focus {
     color: black;
     background-color: #fff;
+    width: 15rem;
+    transition: width 0.5s;
 }
 .head-item-nav {
     display: flex;
@@ -134,15 +140,15 @@ export default {
     color: pink;
 }
  /* WebKit browsers */
-input:focus::-webkit-input-placeholder { color:transparent; }
+input:focus::-webkit-input-placeholder { color:gray;}
 /* Mozilla Firefox 4 to 18 */
-input:focus:-moz-placeholder { color:transparent; }
+input:focus:-moz-placeholder { color:gray;}
 /* Mozilla Firefox 19+ */
-input:focus::-moz-placeholder { color:transparent; }
+input:focus::-moz-placeholder { color:gray;}
 /* Internet Explorer 10+ */
-input:focus:-ms-input-placeholder { color:transparent; }
+input:focus:-ms-input-placeholder { color:gray;}
  /* WebKit browsers */
-input::-webkit-input-placeholder { color:#fff; }
+input::-webkit-input-placeholder { color:#fff;}
 /* Mozilla Firefox 4 to 18 */
 input:-moz-placeholder { color:#fff; }
 /* Mozilla Firefox 19+ */
@@ -262,6 +268,14 @@ input:-ms-input-placeholder { color:#fff; }
     .menu {
         cursor: pointer;
         display: block;
+    }
+    .head-item .searchinput input {
+        min-height: 2rem;
+        width: 100%;
+    }
+    .head-item .searchinput input:focus {
+        width: 100%;
+        transition: none;
     }
 }
 .displayhiding {
