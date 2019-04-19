@@ -13,12 +13,12 @@
             </div>
             <div class="link-top"></div>
             <nav class="head-item-nav">
-                <router-link :to="{path:'/author/aboutauthor'}">
-                    关于作者
+                <router-link :to="{path:'/'}">
+                    首页
                 </router-link>
                 <div class="link-top"></div>
                 <router-link :to="{path:'/author/aboutauthor'}">
-                    关于作者
+                    添加
                 </router-link>
                 <div class="link-top"></div>
                 <router-link :to="{path:'/author/aboutauthor'}">
@@ -272,6 +272,7 @@ input:-ms-input-placeholder { color:#fff; }
     .head-item .searchinput input {
         min-height: 2rem;
         width: 100%;
+        transition: none;
     }
     .head-item .searchinput input:focus {
         width: 100%;
@@ -324,6 +325,7 @@ input:-ms-input-placeholder { color:#fff; }
         color: #fff;
         text-indent: 0.4rem;
         margin-right: 1rem;
+        transition: none;
     }
     .head-item .searchinput input:focus {
         color: black;

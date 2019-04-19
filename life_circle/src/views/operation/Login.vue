@@ -140,6 +140,7 @@ export default {
         this.loginBtn.opacity = '0.9';
         this.loginBtn.backgroundColor = '#72d4fd';
         Userlogin(this.loginUname,this.loginUpassword).then( res => {
+          console.log(res);
           if(res == true) {
             // console.log(1);
             this.$router.replace({name:"home"});

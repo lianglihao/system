@@ -5,14 +5,18 @@
         </header>
         <div class="home-body" ref="homebody">
             <div class="home-body-left" id="boxFixed" :class="{'isFixed':isFixed}">
-                <h1>大家好</h1>
-                <h1>大家好</h1>
-                <h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1>
+                <div class="left-box">
+                    <div class="head-user-avater-uname">
+                        <img :src="headimg"  class="head-user-avater"  :alt="uname">
+                        <h1>{{uname}}</h1>
+                    </div>
+                    <div class="link-top"></div>
+                </div>
             </div>
             <div class="home-body-middle">
                 <h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1>
             </div>
-            <div class="home-body-right"></div>
+            <div class="home-body-right">da家好</div>
         </div>
     </div>
 </template>
@@ -27,8 +31,8 @@ export default {
     },
     data() { 
         return {
-            uname: '',
-            headimg: '',
+            uname: localStorage.getItem('uname'),
+            headimg: localStorage.getItem('headimg'),
             isLogin: localStorage.getItem('isLogin'),
             isFixed: false,
             offsetTop: 0
@@ -83,9 +87,6 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-    font-size: 3rem;
-}
 .home {
     width: 100%;
 }
@@ -101,19 +102,58 @@ header {
         padding: 1rem 2rem;
     }
 }
-.home-body {
-    height: 100%;
+.link-top {
     width: 100%;
-    background: red;
+    height: 1px;
+    border-top: solid #fff 1px;
+    display: block;
+}
+.home-body {
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
 }
 .home-body-left {
-    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
     width: 24%;
-    background: white;
+    background: purple;
     position: absolute;
+    overflow: scroll;
+}
+.left-box {
+    background: red;
+    height: 100%;
+    width: 80%;
+    margin: 0 auto;
+}
+.head-user-avater-uname {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.head-user-avater-uname h1 {
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-right: 0.6rem;
+    font-size: 16px;
+}
+.head-user-avater {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-right: 0.5rem;
+    background: rgb(250, 121, 121);
 }
 .isFixed {
     position: fixed;
@@ -124,5 +164,11 @@ header {
     height: 100%;
     width: 50%;
     background: yellow;
+    min-height: 100vh;
+}
+.home-body-right {
+    height: 100%;
+    width: 26%;
+    background: pink;
 }
 </style>
