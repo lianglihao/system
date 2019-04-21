@@ -109,6 +109,8 @@ header {
     width: 100%;
     height: 1px;
     border-top: solid #fff 1px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     display: block;
 }
 .home-body {
@@ -138,7 +140,6 @@ header {
     flex-direction: row;
     align-items: center;
     margin-top: 2rem;
-    margin-bottom: 1rem;
 }
 .head-user-avater-uname h1 {
     color: #fff;

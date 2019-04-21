@@ -212,6 +212,7 @@ export default {
             this.headpromptMsg = '注册成功';
             localStorage.setItem('accountnumber',this.registAccountnumber);
             this.loginUname = localStorage.getItem('accountnumber');
+            this.LoginRegistration = '注册';
             this.registclass = 'removeRegister';
             this.loginclass = 'addLogin';
             this.registUname = '';
