@@ -7,12 +7,12 @@
           <h1>生活圈</h1>
         </div>
         <div class="right">
-          <button @click="change">{{LoginRegistration}}</button>
+          <button :disabled="disabled" @click="change">{{LoginRegistration}}</button>
           <h1><router-link :to="{path:'/author/aboutauthor'}">关于作者</router-link></h1>
         </div>
       </div>
       <div class="external-headprompt">
-        <div class="headprompt" :class="{headpromptdisplay:headpromptIsDisplay}">
+        <div class="headprompt" :class="{headpromptdisplay:headpromptIsDisplay,headpromptsucess:headPromptsucess}">
           <span>{{headpromptMsg}}</span>
           <button @click="closeHeadprompt">X</button>
         </div>
@@ -49,15 +49,15 @@
           <div class="registform" :class="registclass">
             <form class="formregist" @submit.prevent="regist" autocomplete="off">
               <div class="formregist-uname">
-                <input onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" type="text" placeholder="用户名" auto-complete="new-password">
+                <input ref="registUname" v-model="registUname" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" type="text" placeholder="用户名" auto-complete="new-password">
               </div>
               <div onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" class="formregist-uname">
-                <input type="text" placeholder="账号" auto-complete="new-password">
+                <input ref="registAccountnumber" v-model="registAccountnumber" type="text" placeholder="账号" auto-complete="new-password">
               </div>
               <div class="formregist-upassword">
-                <input onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" type="password" placeholder="密码" auto-complete="new-password">
+                <input ref="registUpassword" v-model="registUpassword" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" type="password" placeholder="密码" auto-complete="new-password">
               </div>
-              <button class="loginButton" :class="registLoding">
+              <button :style="loginBtn" class="loginButton" :class="loginLoding" :disabled="disabled">
                 <span>注册</span>
                 <img src="../../assets/go.png" alt="">
               </button>
@@ -88,6 +88,7 @@ export default {
   },
   data() {
     return {
+      headPromptsucess: false,
       LoginRegistration: '注册',
       headpromptIsDisplay: false,
       headpromptMsg: '',
@@ -103,6 +104,9 @@ export default {
       checked: false,
       loginUname: localStorage.getItem('accountnumber'),
       loginUpassword: '',
+      registUname: '',
+      registAccountnumber: '',
+      registUpassword: ''
     }
   },
   methods: {
@@ -126,6 +130,7 @@ export default {
     },
     login() {
       if(this.loginUname == '' || this.loginUpassword == ''){
+        this.headprompt = 'headprompt';
         this.headpromptIsDisplay = true;
         this.headpromptMsg = 'account or password cannot be empty.';
         if(this.loginUname == '') {
@@ -140,11 +145,12 @@ export default {
         this.loginBtn.opacity = '0.9';
         this.loginBtn.backgroundColor = '#72d4fd';
         Userlogin(this.loginUname,this.loginUpassword).then( res => {
-          console.log(res);
+          // console.log(res);
           if(res == true) {
             // console.log(1);
             this.$router.replace({name:"home"});
           }else {
+            this.headprompt = 'headprompt';
             this.headpromptIsDisplay = true;
             this.headpromptMsg = 'Incorrect username or password.';
             this.disabled = false;
@@ -163,7 +169,61 @@ export default {
       }
     },
     regist() {
-      Userregistration()
+      if(this.registUname == '' || this.registAccountnumber == '' || this.registUpassword == '') {
+        this.headprompt = 'headprompt';
+        this.headpromptIsDisplay = true;
+        this.headpromptMsg = '请完善注册账号所需的信息';
+        if(this.registUname == '') {
+          this.$refs.registUname.focus();
+        }else if(this.registAccountnumber == '') {
+          this.$refs.registAccountnumber.focus();
+        }else if(this.registUpassword == '') {
+          this.$refs.registUpassword.focus();
+        }
+      }else {
+        var that = this;
+        this.disabled = true;
+        this.loginLoding = 'loginLoding';
+        this.loginBtn.opacity = '0.9';
+        this.loginBtn.backgroundColor = '#72d4fd';
+        Userregistration(this.registUname,this.registAccountnumber,this.registUpassword).then( res => {
+          console.log(res);
+          if(res == '用户名已被注册') {
+            this.$refs.registUname.focus();
+            this.headprompt = 'headprompt';
+            this.headpromptIsDisplay = true;
+            this.headpromptMsg = '用户名已被注册';
+            that.disabled = false;
+            this.loginLoding = '';
+            this.loginBtn.opacity = '';
+            this.loginBtn.backgroundColor = '';
+          }else if(res == '账号已被注册') {
+            this.$refs.registUname.focus();
+            this.headprompt = 'headprompt';
+            this.headpromptIsDisplay = true;
+            this.headpromptMsg = '账号已被注册';
+            that.disabled = false;
+            this.loginLoding = '';
+            this.loginBtn.opacity = '';
+            this.loginBtn.backgroundColor = '';
+          }else if(res == true) {
+            this.headPromptsucess = true;
+            this.headpromptIsDisplay = true;
+            this.headpromptMsg = '注册成功';
+            localStorage.setItem('accountnumber',this.registAccountnumber);
+            this.loginUname = localStorage.getItem('accountnumber');
+            this.registclass = 'removeRegister';
+            this.loginclass = 'addLogin';
+            this.registUname = '';
+            this.registAccountnumber = '';
+            this.registUpassword = '';
+            this.disabled = false;
+            this.loginLoding = '';
+            this.loginBtn.opacity = '';
+            this.loginBtn.backgroundColor = '';
+          }
+        })
+      }
     },
     closeHeadprompt() {
       this.headpromptIsDisplay = false;
@@ -175,6 +235,11 @@ export default {
         setTimeout( () => {
           this.headpromptIsDisplay = false;
         },2000)
+        if(this.headPromptsucess == true) {
+          setTimeout( () => {
+          this.headPromptsucess = false;
+        },2000)
+        }
       }
     }
   },
@@ -226,6 +291,33 @@ export default {
 }
 .headprompt button:hover {
   color: #86181d;
+}
+.headpromptsucess {
+  padding-left: 10px; 
+  box-sizing: border-box;
+  position: absolute;
+  height: 40px;
+  background-color: #cbf7ae;
+  color: #16ad3c;
+  font-size: 0.8rem;
+  line-height: 40px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #d0f7b6;
+  overflow: hidden;
+  transform: translateY(-100%);
+}
+.headpromptsucess button {
+  /* margin-left: 7%; */
+  outline: none;
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  border: none;
+  color: #16ad3cb0;
+}
+.headpromptsucess button:hover {
+  color: #16ad3c;
 }
 .headpromptdisplay {
   transform: translateY(0);

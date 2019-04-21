@@ -54,21 +54,25 @@ export function Userregistration(uname,accountnumber,upassword) {
             let resultaccountnumber = users.filter( (users) => {
                 return users.AccountNumber === accountnumber
             })
-            let resultupassword = users.filter( (users) => {
-                return users.password === upassword
+            let resultuname = users.filter( (users) => {
+                return users.username === uname
             })
-            if(resultaccountnumber != null && resultaccountnumber.length > 0) {
+            if(resultuname != null && resultuname.length > 0) {
                 resolve('用户名已被注册');
-            }else if(resultupassword != null && resultupassword.length > 0) {
+            }else if(resultaccountnumber != null && resultaccountnumber.length > 0) {
                 resolve('账号已被注册');
             }else {
                 axios.post('/api/register', {
                     username: uname,
                     AccountNumber: accountnumber,
                     password: upassword,
+                }).then( res => {
+                    resolve(true);
                 })
             }
-        })
+        }).catch(function(error) {
+            reject(error);
+        });
     })
 }
 

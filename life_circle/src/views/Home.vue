@@ -38,6 +38,9 @@ export default {
             offsetTop: 0
         }
     },
+    created() {
+        sessionStorage.setItem('sss',Math.random())
+    },
     mounted() {
         this.uname = this.$refs.headerChild.uname;
         this.headimg = this.$refs.headerChild.headimg;
@@ -51,7 +54,7 @@ export default {
         })
     },
     methods: {
-        initHeight () {
+        initHeight() {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
             this.isFixed = scrollTop > this.offsetTop ? true : false;
         },
@@ -61,7 +64,7 @@ export default {
             this.$nextTick( () => {
                 this.offsetTop = document.querySelector('#boxFixed').offsetTop;
             })
-        }
+        },
     },
     watch: {
         isLogin: function() {
