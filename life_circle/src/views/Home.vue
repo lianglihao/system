@@ -11,6 +11,19 @@
                         <h1>{{uname}}</h1>
                     </div>
                     <div class="link-top"></div>
+                    <div class="classification">
+                        <div class="classificationADD">
+                            <h1>classification</h1>
+                            <button><img width="20" height="20" src="../assets/home/whrit.svg">New</button>
+                        </div>
+                        <div class="classificationSearch">
+                            <input type="text" placeholder="Find a classification...">
+                        </div>
+                        <ul class="classificationContent">
+                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/author/aboutauthor'}"><img width="20" height="20" src="../assets/home/classification.svg">{{item}}</router-link></li>
+                        </ul>
+                    </div>
+                    <div class="link-top"></div>
                 </div>
             </div>
             <div class="home-body-middle">
@@ -27,7 +40,7 @@ import myheader from '@/components/myHeader'
 export default {
     name: 'home',
     components: {
-        myheader: myheader
+        myheader: myheader,
     },
     data() { 
         return {
@@ -35,11 +48,12 @@ export default {
             headimg: localStorage.getItem('headimg'),
             isLogin: localStorage.getItem('isLogin'),
             isFixed: false,
-            offsetTop: 0
+            offsetTop: 0,
+            classification: ['123','333']
         }
     },
     created() {
-        sessionStorage.setItem('sss',Math.random())
+        
     },
     mounted() {
         this.uname = this.$refs.headerChild.uname;
@@ -74,6 +88,9 @@ export default {
             }
             this.$router.push({name:'login'});
         }
+    },
+    mounted() {
+
     },
     beforeRouteEnter:(to,from,next) => {
         var isLogin = localStorage.getItem("isLogin")
@@ -133,6 +150,9 @@ header {
     height: 100%;
     width: 80%;
     margin: 0 auto;
+    /* display: flex;
+    display: -webkit-flex;
+    flex-direction: column; */
 }
 .head-user-avater-uname {
     display: flex;
@@ -142,7 +162,7 @@ header {
     margin-top: 2rem;
 }
 .head-user-avater-uname h1 {
-    color: #fff;
+    color:black;
     font-weight: 500;
     text-decoration: none;
     margin-right: 0.6rem;
@@ -158,6 +178,78 @@ header {
     overflow: hidden;
     margin-right: 0.5rem;
     background: rgb(250, 121, 121);
+}
+.classificationADD {
+    width: 100%;
+    background: yellow;
+    overflow: hidden;
+    /* 使用浮动的父级添加overflow: hidden;清除浮动 */
+    position: relative;
+    /* line-height: 250%; */
+}
+.classificationADD h1 {
+    font-weight: 500;
+    font-size: 1rem;
+    float: left;
+    margin-top: 1%;
+}
+.classificationADD button {
+    float: right;
+    height: 1.8rem;
+    background: #28a745;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.8rem;
+    border-radius: 5px;
+    border-color: #28a745;
+    outline: none;
+    color: white;
+    cursor: pointer;
+}
+.classificationADD button img {
+    margin-top: 5%;
+}
+.classificationADD button:hover {
+    border-color: #1c7732;
+}
+.classificationSearch {
+    margin-top: 1%;
+    width: 100%;
+    background: green;
+}
+.classificationSearch input {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    height: 2rem;
+    outline: none;
+    border: 0;
+    border-radius: 2px;
+    background-color: #fff;
+    color: black;
+    text-indent: 0.4rem;
+}
+.classificationContent {
+    width: 100%;
+    height: 100%;
+    margin-top: 8%;
+}
+.classificationContent li {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 4%;
+}
+.classificationContent li a {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #0366d6;
+    text-decoration: none;
+}
+.classificationContent li a:hover {
+    text-decoration: underline;
+}
+.classificationContent img {
+    margin-right: 4%;
 }
 .isFixed {
     position: fixed;
@@ -175,4 +267,12 @@ header {
     width: 26%;
     background: pink;
 }
+ /* WebKit browsers */
+input::-webkit-input-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
+/* Mozilla Firefox 4 to 18 */
+input:-moz-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
+/* Mozilla Firefox 19+ */
+input::-moz-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
+/* Internet Explorer 10+ */
+input:-ms-input-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
 </style>
