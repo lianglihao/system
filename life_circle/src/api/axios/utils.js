@@ -76,6 +76,21 @@ export function Userregistration(uname,accountnumber,upassword) {
     })
 }
 
+export async function selectClassification(uname) {
+    try {
+        return new Promise((resolve, reject) => {
+            axios.get('/api/selectClassification', {
+                params: { username: uname }
+            }).then(res => {
+                resolve(res);
+            });
+        });
+    }
+    catch (error) {
+        reject(error);
+    }
+}
+
 // module.exports = {
 //     Userlogin: Userlogin,
 //     Userregistration: Userregistration

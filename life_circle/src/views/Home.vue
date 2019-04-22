@@ -17,10 +17,10 @@
                             <button><img width="20" height="20" src="../assets/home/whrit.svg">New</button>
                         </div>
                         <div class="classificationSearch">
-                            <input type="text" placeholder="Find a classification...">
+                            <input v-model="kind" type="text" placeholder="Find a classification...">
                         </div>
-                        <ul class="classificationContent">
-                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/author/aboutauthor'}"><img width="20" height="20" src="../assets/home/classification.svg">{{item}}</router-link></li>
+                        <ul class="classificationContent" @click="showli">
+                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/'}"><img width="20" height="20" src="../assets/home/classification.svg">{{item}}</router-link></li>
                         </ul>
                     </div>
                     <div class="link-top"></div>
@@ -36,6 +36,7 @@
 
 <script>
 import myheader from '@/components/myHeader'
+import { selectClassification } from '@/api/axios/utils'
 
 export default {
     name: 'home',
@@ -49,7 +50,9 @@ export default {
             isLogin: localStorage.getItem('isLogin'),
             isFixed: false,
             offsetTop: 0,
-            classification: ['123','333']
+            classification: [],
+            classificationbackups: [],
+            kind: ''
         }
     },
     created() {
@@ -66,6 +69,12 @@ export default {
         this.$nextTick( () => {
             this.offsetTop = document.querySelector('#boxFixed').offsetTop;
         })
+
+        selectClassification(this.uname).then( res => {
+            let a = res.data[0].classification;
+            this.classification = a.split('**/');
+            this.classificationbackups = a.split('**/');
+        })
     },
     methods: {
         initHeight() {
@@ -79,18 +88,44 @@ export default {
                 this.offsetTop = document.querySelector('#boxFixed').offsetTop;
             })
         },
-    },
-    watch: {
-        isLogin: function() {
-            console.log(1);
-            if(isLogin == null){
-                alert('您使用另一个选项卡或窗口退出。重新加载以刷新会话。');
+        showli(ev) {
+            // 事件委托,点击分类
+            var ev = ev || window.event;
+            var target = ev.target || ev.srcElement;
+            if(target.nodeName.toLowerCase() == 'a'){
+                var a = target.innerHTML;
+                console.log(a.slice(a.lastIndexOf('>')+1));
             }
-            this.$router.push({name:'login'});
+        },
+        classificationSearch() {
+            // 实现模糊查询分类
+            if(this.kind == '') {
+                this.classification = this.classificationbackups;
+            }else {
+                var _search = this.kind.toLowerCase();
+                var newclassification = [];
+                this.classificationbackups.filter( item => {
+                    if(item.toLowerCase().indexOf(_search) !== -1) {
+                        newclassification.push(item);
+                    }
+                })
+                this.classification = newclassification;
+            }
         }
     },
-    mounted() {
-
+    watch: {
+        kind: function() {
+            // 监听搜索框输入的变化，调用classificationSearch()方法进行模糊查询分类
+            console.log(this.kind)
+            this.classificationSearch();
+        }
+        // isLogin: function() {
+        //     console.log(1);
+        //     if(isLogin == null){
+        //         alert('您使用另一个选项卡或窗口退出。重新加载以刷新会话。');
+        //     }
+        //     this.$router.push({name:'login'});
+        // }
     },
     beforeRouteEnter:(to,from,next) => {
         var isLogin = localStorage.getItem("isLogin")
