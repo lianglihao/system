@@ -14,13 +14,19 @@
                     <div class="classification">
                         <div class="classificationADD">
                             <h1>classification</h1>
-                            <button><img width="20" height="20" src="../assets/home/whrit.svg">New</button>
+                            <button @click="showAddclassificationbox"><img width="20" height="20" src="../assets/home/whrit.svg">New</button>
+                        </div>
+                        <div class="classificationADDonclickbox" :class="{classificationADDonclickboxPosition:classificationADDonclick}">
+                            <div class="classificationADDonclick" :class="{classificationADDonclickboxTransform:classificationADDonclick}">
+                                <input v-model="kind" type="text" placeholder="Add a classification...">
+                                <button>Add</button>
+                            </div>
                         </div>
                         <div class="classificationSearch">
                             <input v-model="kind" type="text" placeholder="Find a classification...">
                         </div>
                         <ul class="classificationContent" @click="showli">
-                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/'}"><img width="20" height="20" src="../assets/home/classification.svg">{{item}}</router-link></li>
+                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/'}"><img width="20%" height="20%" src="../assets/home/classification.svg">{{item}}</router-link></li>
                         </ul>
                     </div>
                     <div class="link-top"></div>
@@ -50,9 +56,10 @@ export default {
             isLogin: localStorage.getItem('isLogin'),
             isFixed: false,
             offsetTop: 0,
+            classificationADDonclick: false,
             classification: [],
             classificationbackups: [],
-            kind: ''
+            kind: '',
         }
     },
     created() {
@@ -111,6 +118,9 @@ export default {
                 })
                 this.classification = newclassification;
             }
+        },
+        showAddclassificationbox() {
+            this.classificationADDonclick = true;
         }
     },
     watch: {
@@ -221,6 +231,7 @@ header {
     /* 使用浮动的父级添加overflow: hidden;清除浮动 */
     position: relative;
     /* line-height: 250%; */
+    overflow: hidden;
 }
 .classificationADD h1 {
     font-weight: 500;
@@ -231,6 +242,60 @@ header {
 .classificationADD button {
     float: right;
     height: 1.8rem;
+    width: 23%;
+    background: #28a745;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.8rem;
+    border-radius: 5px;
+    border-color: #28a745;
+    outline: none;
+    color: white;
+    cursor: pointer;
+}
+.classificationADDonclickbox {
+    margin-top: 2%;
+    position: relative;
+    width: 100%;
+    height: 0rem;
+    overflow: hidden;
+    visibility: hidden;
+}
+.classificationADDonclickboxPosition {
+    visibility: visible;
+    height: 2rem;
+    transition: all 0.5s;
+}
+.classificationADDonclick {
+    width: 100%;
+    background: yellow;
+    overflow: hidden;
+    /* 使用浮动的父级添加overflow: hidden;清除浮动 */
+    position: relative;
+    /* line-height: 250%; */
+    transform: translateY(-100%);
+}
+.classificationADDonclickboxTransform {
+    transform: translateY(0);
+    transition: transform 1s;
+}
+.classificationADDonclick input {
+    float: left;
+    width: 75%;
+    font-size: 1rem;
+    font-weight: 500;
+    height: 1.8rem;
+    outline: none;
+    border: 0;
+    border-radius: 2px;
+    background-color: #fff;
+    color: black;
+    text-indent: 0.4rem;
+}
+.classificationADDonclick button {
+    float: right;
+    height: 1.8rem;
+    width: 23%;
     background: #28a745;
     font-size: 0.8rem;
     font-weight: 500;
@@ -248,7 +313,7 @@ header {
     border-color: #1c7732;
 }
 .classificationSearch {
-    margin-top: 1%;
+    margin-top: 2%;
     width: 100%;
     background: green;
 }
