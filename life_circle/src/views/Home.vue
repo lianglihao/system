@@ -18,15 +18,15 @@
                         </div>
                         <div class="classificationADDonclickbox" :class="{classificationADDonclickboxPosition:classificationADDonclick}">
                             <div class="classificationADDonclick" :class="{classificationADDonclickboxTransform:classificationADDonclick}">
-                                <input v-model="kind" type="text" placeholder="Add a classification...">
-                                <button>Add</button>
+                                <input v-model="kindOfadd" type="text" placeholder="Add a classification...">
+                                <button @click="addClassification">Add</button>
                             </div>
                         </div>
                         <div class="classificationSearch">
                             <input v-model="kind" type="text" placeholder="Find a classification...">
                         </div>
                         <ul class="classificationContent" @click="showli">
-                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/'}"><img width="20%" height="20%" src="../assets/home/classification.svg">{{item}}</router-link></li>
+                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/'}"><img width="20" height="20" src="../assets/home/classification.svg">{{item}}</router-link></li>
                         </ul>
                     </div>
                     <div class="link-top"></div>
@@ -59,6 +59,7 @@ export default {
             classificationADDonclick: false,
             classification: [],
             classificationbackups: [],
+            kindOfadd: '',
             kind: '',
         }
     },
@@ -120,13 +121,19 @@ export default {
             }
         },
         showAddclassificationbox() {
-            this.classificationADDonclick = true;
+            if(this.classificationADDonclick == true) {
+                this.classificationADDonclick = false;
+            }else {
+                this.classificationADDonclick = true;
+            }
+        },
+        addClassification() {
+            console.log(this.kindOfadd);
         }
     },
     watch: {
         kind: function() {
             // 监听搜索框输入的变化，调用classificationSearch()方法进行模糊查询分类
-            console.log(this.kind)
             this.classificationSearch();
         }
         // isLogin: function() {
@@ -264,7 +271,7 @@ header {
 .classificationADDonclickboxPosition {
     visibility: visible;
     height: 2rem;
-    transition: all 0.5s;
+    transition: all 0.5s linear;
 }
 .classificationADDonclick {
     width: 100%;
@@ -272,12 +279,11 @@ header {
     overflow: hidden;
     /* 使用浮动的父级添加overflow: hidden;清除浮动 */
     position: relative;
-    /* line-height: 250%; */
     transform: translateY(-100%);
 }
 .classificationADDonclickboxTransform {
     transform: translateY(0);
-    transition: transform 1s;
+    transition: transform 0.5s linear;
 }
 .classificationADDonclick input {
     float: left;
