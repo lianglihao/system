@@ -54,11 +54,11 @@
                         <p style="color:grey">加载中...</p>
                     </div>
                 </div>
-                <div class="middleTitle">
+                <div class="middleTitle" v-for=" (item,index) in getMiddlecontent" :key="index">
                     <div class="middleTitleleft">
-                        <img :src="headimg" class="middle-user-avater">
+                        <img :src="item.headimg" class="middle-user-avater">
                     </div>
-                    <div class="middleTitleright">123</div>
+                    <div class="middleTitleright">{{item.uname}}分享于{{item.dateTim}}</div>
                 </div>
             </div>
             <div class="home-body-right">da家好</div>
@@ -68,7 +68,8 @@
 
 <script>
 import myheader from '@/components/myHeader'
-import { selectClassification,addKind } from '@/api/axios/utils'
+import { selectClassification,addKind,getContentforKind } from '@/api/axios/utils'
+import { setTimeout } from 'timers';
 
 export default {
     name: 'home',
@@ -93,7 +94,8 @@ export default {
             kind: '',
             activekind: '',
             middleloading: 'display:none',
-            liactiveClass: -1,
+            liactiveClass: 0,
+            middlecontent: []
         }
     },
     created() {
@@ -115,6 +117,29 @@ export default {
             let a = res.data[0].classification;
             this.classification = a.split('**/');
             this.classificationbackups = a.split('**/');
+            this.middleloading = '';
+            getContentforKind(this.classificationbackups[0],this.uname).then( res => {
+                // var data = res.data[0].dateTim;
+                // console.log(data.split(' '));
+                this.middlecontent = res.data;
+                var now = String(new Date()).split(' ');
+                var nowYear = now[3];
+                var nowMonth = now[1];
+                var nowDay = now[2]
+                for(var data of this.middlecontent){
+                    if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] == nowDay && data.dateTim.split(' ')[3] == nowYear) {
+                        data.dateTim = `${data.dateTim.split(' ')[4]}`;
+                    }else if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] != nowDay && data.dateTim.split(' ')[3] == nowYear) {
+                        data.dateTim = `${nowDay-data.dateTim.split(' ')[2]}天前`;
+                    }else if(data.dateTim.split(' ')[1] != nowMonth && data.dateTim.split(' ')[3] == nowYear) {
+                        data.dateTim = `${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]}`;
+                    }else if(data.dateTim.split(' ')[3] != nowYear) {
+                        data.dateTim = `${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
+                    }
+                }
+                console.log(this.middlecontent);
+                this.middleloading = 'display:none';
+            })
         })
     },
     methods: {
@@ -202,6 +227,11 @@ export default {
         },
         closeHeadpromptleftbox() {
             this.headpromptIsDisplayleftbox = false;
+        },
+    },
+    computed:{
+        getMiddlecontent() {
+            return this.middlecontent;
         }
     },
     watch: {
@@ -531,6 +561,7 @@ header {
 .classificationContent span {
     height: 1rem;
     width: 1rem;
+    margin-top: 4px;
 }
 .liactive {
     border-radius: 50%;
@@ -596,7 +627,6 @@ header {
 }
 .middleTitle {
     width: 90%;
-    height: 500px;
     background: #00B4FF;
     margin: 0 auto;
     display: flex;

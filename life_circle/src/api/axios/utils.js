@@ -93,7 +93,7 @@ export async function selectClassification(uname) {
 
 export async function addKind(uname,classification) {
     try {
-        return new Promise((resolve, reject) => {
+        return new Promise( (resolve, reject) => {
             axios.post('/api/addClassification', {
                 username: uname,
                 classification: classification
@@ -105,6 +105,18 @@ export async function addKind(uname,classification) {
     catch (error) {
         reject(error);
     }
+}
+
+export function getContentforKind(kind,uname) {
+    return new Promise( (resolve,reject) => {
+        axios.get('/api/getContentforKind', {
+            params: { kind: kind,uname: uname }
+        }).then( res => {
+            resolve(res);
+        }).catch( error => {
+            reject(error);
+        })
+    })
 }
 
 // module.exports = {
