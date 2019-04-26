@@ -91,6 +91,22 @@ export async function selectClassification(uname) {
     }
 }
 
+export async function addKind(uname,classification) {
+    try {
+        return new Promise((resolve, reject) => {
+            axios.post('/api/addClassification', {
+                username: uname,
+                classification: classification
+            }).then(res => {
+                resolve(res);
+            });
+        });
+    }
+    catch (error) {
+        reject(error);
+    }
+}
+
 // module.exports = {
 //     Userlogin: Userlogin,
 //     Userregistration: Userregistration

@@ -3,22 +3,34 @@
         <header>
             <myheader ref="headerChild" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
-        <div class="home-body" ref="homebody">
+        <div class="external-headpromptleftbox">
+                        <div class="headpromptleftbox" :class="{headpromptdisplayleftbox:headpromptIsDisplayleftbox,headpromptsucessleftbox:headPromptsucessleftbox}">
+                            <span>{{headpromptMsgleftbox}}</span>
+                            <button @click="closeHeadpromptleftbox">X</button>
+                        </div>
+                    </div>
+        <div class="home-body allbgcolor" ref="homebody">
             <div class="home-body-left" id="boxFixed" :class="{'isFixed':isFixed}">
                 <div class="left-box">
+                    
                     <div class="head-user-avater-uname">
-                        <img :src="headimg"  class="head-user-avater"  :alt="uname">
-                        <h1>{{uname}}</h1>
+                        <div class="head-user-avater-unameleft">
+                            <img :src="headimg"  class="head-user-avater"  :alt="uname">
+                            <h1>{{uname}}</h1>
+                        </div>
+                        <div class="head-user-avater-unameright" style="display:none">
+                            {{headuseravaterunamerightmsg}}
+                        </div>
                     </div>
                     <div class="link-top"></div>
                     <div class="classification">
                         <div class="classificationADD">
                             <h1>classification</h1>
-                            <button @click="showAddclassificationbox"><img width="20" height="20" src="../assets/home/whrit.svg">New</button>
+                            <button @click="showAddclassificationbox">New</button>
                         </div>
                         <div class="classificationADDonclickbox" :class="{classificationADDonclickboxPosition:classificationADDonclick}">
                             <div class="classificationADDonclick" :class="{classificationADDonclickboxTransform:classificationADDonclick}">
-                                <input v-model="kindOfadd" type="text" placeholder="Add a classification...">
+                                <input ref="addclassification" v-model="kindOfadd" type="text" placeholder="Add a classification...">
                                 <button @click="addClassification">Add</button>
                             </div>
                         </div>
@@ -26,14 +38,28 @@
                             <input v-model="kind" type="text" placeholder="Find a classification...">
                         </div>
                         <ul class="classificationContent" @click="showli">
-                            <li v-for="item in this.classification" :key="item"><router-link :to="{path:'/'}"><img width="20" height="20" src="../assets/home/classification.svg">{{item}}</router-link></li>
+                            <li v-for="(item,index) in this.classification" :key="index"><router-link :to="{path:'/'}"><img width="23" height="23" src="../assets/home/classification.svg">{{item}}</router-link><span style="float:right" :class="liactiveClass == index ? 'liactive' : '' "></span></li>
                         </ul>
+                        <div class="link-top"></div>
+                        <div class="left-box-end">
+                            <p>创建新的分类开始记录吧！！！</p>
+                        </div>
                     </div>
-                    <div class="link-top"></div>
                 </div>
             </div>
             <div class="home-body-middle">
-                <h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1><h1>大家好</h1>
+                <div class="middle-box">
+                    <div :style="middleloading" class="middle-box-loading">
+                        <img src="../assets/draw.png">
+                        <p style="color:grey">加载中...</p>
+                    </div>
+                </div>
+                <div class="middleTitle">
+                    <div class="middleTitleleft">
+                        <img :src="headimg" class="middle-user-avater">
+                    </div>
+                    <div class="middleTitleright">123</div>
+                </div>
             </div>
             <div class="home-body-right">da家好</div>
         </div>
@@ -42,7 +68,7 @@
 
 <script>
 import myheader from '@/components/myHeader'
-import { selectClassification } from '@/api/axios/utils'
+import { selectClassification,addKind } from '@/api/axios/utils'
 
 export default {
     name: 'home',
@@ -51,6 +77,10 @@ export default {
     },
     data() { 
         return {
+            headuseravaterunamerightmsg: '',
+            headpromptMsgleftbox: '',
+            headpromptIsDisplayleftbox: false,
+            headPromptsucessleftbox: false,
             uname: localStorage.getItem('uname'),
             headimg: localStorage.getItem('headimg'),
             isLogin: localStorage.getItem('isLogin'),
@@ -61,6 +91,9 @@ export default {
             classificationbackups: [],
             kindOfadd: '',
             kind: '',
+            activekind: '',
+            middleloading: 'display:none',
+            liactiveClass: -1,
         }
     },
     created() {
@@ -100,14 +133,17 @@ export default {
             // 事件委托,点击分类
             var ev = ev || window.event;
             var target = ev.target || ev.srcElement;
-            if(target.nodeName.toLowerCase() == 'a'){
-                var a = target.innerHTML;
-                console.log(a.slice(a.lastIndexOf('>')+1));
+            if(target.nodeName.toLowerCase() == 'a') {
+                var value = target.innerHTML.slice(target.innerHTML.lastIndexOf('>')+1);
+                this.activekind = value;
+                var index = this.classification.indexOf(value);
+                this.liactiveClass = index;
             }
         },
         classificationSearch() {
             // 实现模糊查询分类
             if(this.kind == '') {
+                this.liactiveClass = this.classificationbackups.indexOf(this.activekind);
                 this.classification = this.classificationbackups;
             }else {
                 var _search = this.kind.toLowerCase();
@@ -118,6 +154,7 @@ export default {
                     }
                 })
                 this.classification = newclassification;
+                this.liactiveClass = this.classification.indexOf(this.activekind);
             }
         },
         showAddclassificationbox() {
@@ -128,21 +165,62 @@ export default {
             }
         },
         addClassification() {
-            console.log(this.kindOfadd);
+            if(this.kindOfadd == ''){
+                this.headpromptMsgleftbox = '请输入需要添加的类别'
+                this.headpromptIsDisplayleftbox = true;
+                this.$refs.addclassification.focus();
+            }else {
+                var result = this.classificationbackups.filter( item => {
+                    return item == this.kindOfadd;
+                })
+                if(result != null && result.length > 0) {
+                    this.headpromptMsgleftbox = '已经存在与新增相同类别'
+                    this.headpromptIsDisplayleftbox = true;
+                    this.$refs.addclassification.focus();
+                }else {
+                    var oldclassificationbackups = this.classificationbackups;
+                    this.classificationbackups.push(this.kindOfadd);
+                    var classification = this.classificationbackups.join('**/');
+                    console.log(classification);
+                    console.log(this.classificationbackups);
+                    addKind(this.uname,classification).then( res => {
+                        if(res.status = 200) {
+                            this.classification = this.classificationbackups;
+                            this.headPromptsucessleftbox = true;
+                            this.headpromptIsDisplayleftbox = true;
+                            this.headpromptMsgleftbox = '增加新类别成功';
+                            this.classificationADDonclick = false;
+                        }else {
+                            this.classificationbackups = oldclassificationbackups;
+                            this.headpromptIsDisplayleftbox = true;
+                            this.headpromptMsgleftbox = '由于网络波动或其他原因，请求失败';
+                            this.$refs.addclassification.focus();
+                        }
+                    })
+                }
+            }
+        },
+        closeHeadpromptleftbox() {
+            this.headpromptIsDisplayleftbox = false;
         }
     },
     watch: {
         kind: function() {
             // 监听搜索框输入的变化，调用classificationSearch()方法进行模糊查询分类
             this.classificationSearch();
+        },
+        headpromptIsDisplayleftbox: function() {
+            if(this.headpromptIsDisplayleftbox == true) {
+                setTimeout( () => {
+                    this.headpromptIsDisplayleftbox = false;
+                },2000)
+            if(this.headPromptsucessleftbox == true) {
+                setTimeout( () => {
+                    this.headPromptsucessleftbox = false;
+                },2000)
+                }
+            }
         }
-        // isLogin: function() {
-        //     console.log(1);
-        //     if(isLogin == null){
-        //         alert('您使用另一个选项卡或窗口退出。重新加载以刷新会话。');
-        //     }
-        //     this.$router.push({name:'login'});
-        // }
     },
     beforeRouteEnter:(to,from,next) => {
         var isLogin = localStorage.getItem("isLogin")
@@ -159,6 +237,82 @@ export default {
 </script>
 
 <style scoped>
+.allbgcolor {
+    background-color: #f6f8fa;
+}
+.external-headpromptleftbox {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: 10%;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1000;
+}
+.headpromptleftbox {
+  padding-left: 10px; 
+  box-sizing: border-box;
+  position: absolute;
+  height: 40px;
+  background-color: #ffdce0;
+  color: #86181d;
+  font-size: 0.8rem;
+  line-height: 40px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ffdce0;
+  overflow: hidden;
+  transform: translateY(-100%);
+}
+.headpromptleftbox button {
+  /* margin-left: 7%; */
+  outline: none;
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  border: none;
+  color: #86181da6
+}
+.headpromptleftbox button:hover {
+  color: #86181d;
+}
+.headpromptsucessleftbox {
+  padding-left: 10px; 
+  box-sizing: border-box;
+  position: absolute;
+  height: 40px;
+  background-color: #cbf7ae;
+  color: #16ad3c;
+  font-size: 0.8rem;
+  line-height: 40px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #d0f7b6;
+  overflow: hidden;
+  transform: translateY(-100%);
+}
+.headpromptsucessleftbox button {
+  /* margin-left: 7%; */
+  outline: none;
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+  border: none;
+  color: #16ad3cb0;
+}
+.headpromptsucessleftbox button:hover {
+  color: #16ad3c;
+}
+.headpromptdisplayleftbox {
+  transform: translateY(0);
+  transition: transform 0.6s;
+}
+.headpromptdisplayleftbox {
+  transform: translateY(0);
+  transition: transform 0.6s;
+}
 .home {
     width: 100%;
 }
@@ -169,15 +323,10 @@ header {
     line-height: 1.5;
     padding: 1rem;
 }
-@media (max-width: 1012px){
-    header {
-        padding: 1rem 2rem;
-    }
-}
 .link-top {
     width: 100%;
     height: 1px;
-    border-top: solid #fff 1px;
+    border-top: solid #d1d5da 1px;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     display: block;
@@ -192,26 +341,27 @@ header {
 .home-body-left {
     min-height: 100vh;
     max-height: 100vh;
-    width: 24%;
-    background: purple;
+    width: 20%;
     position: absolute;
     overflow: scroll;
+    background: #fff;
+    border-right: 1px solid #e1e4e8!important;
 }
 .left-box {
-    background: red;
     height: 100%;
     width: 80%;
-    margin: 0 auto;
-    /* display: flex;
-    display: -webkit-flex;
-    flex-direction: column; */
+    margin: 2% auto;
+    background-color: #fff;
 }
 .head-user-avater-uname {
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 2rem;
+    justify-content: space-between;
+    width: 98%;
+    margin: 0 auto;
+    margin-top: 1rem;
 }
 .head-user-avater-uname h1 {
     color:black;
@@ -219,6 +369,18 @@ header {
     text-decoration: none;
     margin-right: 0.6rem;
     font-size: 16px;
+}
+.head-user-avater-unameleft {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    float: left;
+}
+.head-user-avater-unameright {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    float: right;
 }
 .head-user-avater {
     width: 2rem;
@@ -232,28 +394,29 @@ header {
     background: rgb(250, 121, 121);
 }
 .classificationADD {
-    width: 100%;
-    background: yellow;
+    width: 98%;
+    height: 2rem;
     overflow: hidden;
     /* 使用浮动的父级添加overflow: hidden;清除浮动 */
     position: relative;
     /* line-height: 250%; */
-    overflow: hidden;
+    margin: 0 auto;
+    line-height: 2rem;
 }
 .classificationADD h1 {
     font-weight: 500;
     font-size: 1rem;
     float: left;
-    margin-top: 1%;
+    
 }
 .classificationADD button {
     float: right;
-    height: 1.8rem;
+    height: 2rem;
     width: 23%;
     background: #28a745;
     font-size: 0.8rem;
     font-weight: 500;
-    line-height: 1.8rem;
+    line-height: 2rem;
     border-radius: 5px;
     border-color: #28a745;
     outline: none;
@@ -261,21 +424,21 @@ header {
     cursor: pointer;
 }
 .classificationADDonclickbox {
+    margin: 0 auto;
     margin-top: 2%;
     position: relative;
-    width: 100%;
+    width: 98%;
     height: 0rem;
     overflow: hidden;
     visibility: hidden;
 }
 .classificationADDonclickboxPosition {
     visibility: visible;
-    height: 2rem;
-    transition: all 0.5s linear;
+    height: 2.1rem;
+    transition: all 0.2s linear;
 }
 .classificationADDonclick {
     width: 100%;
-    background: yellow;
     overflow: hidden;
     /* 使用浮动的父级添加overflow: hidden;清除浮动 */
     position: relative;
@@ -283,67 +446,75 @@ header {
 }
 .classificationADDonclickboxTransform {
     transform: translateY(0);
-    transition: transform 0.5s linear;
+    transition: transform 0.2s linear;
 }
 .classificationADDonclick input {
     float: left;
     width: 75%;
     font-size: 1rem;
     font-weight: 500;
-    height: 1.8rem;
+    height: 1.9rem;
     outline: none;
-    border: 0;
-    border-radius: 2px;
     background-color: #fff;
     color: black;
     text-indent: 0.4rem;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(27,31,35,.075);
 }
 .classificationADDonclick button {
     float: right;
-    height: 1.8rem;
+    height: 2rem;
     width: 23%;
     background: #28a745;
     font-size: 0.8rem;
     font-weight: 500;
-    line-height: 1.8rem;
+    line-height: 2rem;
     border-radius: 5px;
     border-color: #28a745;
     outline: none;
     color: white;
     cursor: pointer;
 }
+.classificationADDonclick button:hover {
+    border-color: #00B4FF;
+}
 .classificationADD button img {
     margin-top: 5%;
 }
 .classificationADD button:hover {
-    border-color: #1c7732;
+    border-color: #00B4FF;
 }
 .classificationSearch {
+    margin: 0 auto;
     margin-top: 2%;
-    width: 100%;
-    background: green;
+    width: 98%;
 }
 .classificationSearch input {
-    width: 100%;
+    width: 99%;
     font-size: 1rem;
     font-weight: 500;
-    height: 2rem;
+    height: 1.9rem;
     outline: none;
-    border: 0;
-    border-radius: 2px;
     background-color: #fff;
     color: black;
     text-indent: 0.4rem;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(27,31,35,.075);
 }
 .classificationContent {
-    width: 100%;
+    margin: 0 auto;
+    width: 98%;
     height: 100%;
     margin-top: 8%;
+    overflow: hidden;
 }
 .classificationContent li {
     font-size: 1rem;
     font-weight: 500;
-    margin-bottom: 4%;
+    margin-bottom: 2%;
+    height: 24px;
 }
 .classificationContent li a {
     font-size: 1rem;
@@ -357,20 +528,94 @@ header {
 .classificationContent img {
     margin-right: 4%;
 }
+.classificationContent span {
+    height: 1rem;
+    width: 1rem;
+}
+.liactive {
+    border-radius: 50%;
+    background-color: #5ff382;
+}
 .isFixed {
     position: fixed;
     top: 0;
 }
 .home-body-middle {
-    margin-left: 24%;
+    margin-left: 20%;
     height: 100%;
-    width: 50%;
-    background: yellow;
+    width: 60%;
     min-height: 100vh;
+}
+.middle-box {
+    height: 100%;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+.middle-box-loading {
+    width: 100%;
+    background: #fff;
+    text-align: center;
+}
+.middle-box-loading img {
+    width: 10%;
+    margin: 1rem;
+    animation: App-logo infinite 2s linear;
+}
+@keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes App-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.middleTitle {
+    width: 90%;
+    height: 500px;
+    background: #00B4FF;
+    margin: 0 auto;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+}
+.middle-user-avater {
+    width: 2.5rem;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-right: 0.5rem;
+    background: rgb(250, 121, 121);
+    border-radius: 5px;
 }
 .home-body-right {
     height: 100%;
-    width: 26%;
+    width: 20%;
     background: pink;
 }
  /* WebKit browsers */
@@ -381,4 +626,51 @@ input:-moz-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
 input::-moz-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
 /* Internet Explorer 10+ */
 input:-ms-input-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
+/* @media (min-width: 1013px){
+
+} */
+@media (max-width: 1012px){
+    header {
+        padding: 1rem 2rem;
+    }
+    .home-body-left {
+        width: 30%;
+    }
+    .home-body-middle {
+        margin-left: 30%;
+        width: 70%;
+    }
+    .home-body-right {
+        display: none;
+    }
+}
+@media (max-width: 768px){
+    .home-body {
+        flex-direction: column;
+    }
+    .home-body-left {
+        width: 100%;
+        position: relative;
+        min-height: 0;
+        background-color: #f6f8fa;
+    }
+    .home-body-left .left-box {
+        width: 90%;
+        border: 1px solid #d1d5da;
+        border-radius: 3px;
+    }
+    .left-box-end {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1%;
+    }
+    .home-body-middle {
+        width: 100%;
+        margin-left: 0;
+        min-height: 0;
+    }
+    .home-body-middle .middle-box {
+        width: 90%;
+    }
+}
 </style>

@@ -198,7 +198,7 @@ export default {
             this.loginBtn.opacity = '';
             this.loginBtn.backgroundColor = '';
           }else if(res == '账号已被注册') {
-            this.$refs.registUname.focus();
+            this.$refs.registAccountnumber.focus();
             this.headprompt = 'headprompt';
             this.headpromptIsDisplay = true;
             this.headpromptMsg = '账号已被注册';
