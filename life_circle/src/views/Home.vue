@@ -37,7 +37,7 @@
                         <div class="classificationSearch">
                             <input v-model="kind" type="text" placeholder="Find a classification...">
                         </div>
-                        <ul class="classificationContent" @click="showli">
+                        <ul :style="leftBoxul" class="classificationContent" @click="showli">
                             <li v-for="(item,index) in this.classification" :key="index"><router-link :to="{path:'/'}"><img width="23" height="23" src="../assets/home/classification.svg">{{item}}</router-link><span style="float:right" :class="liactiveClass == index ? 'liactive' : '' "></span></li>
                         </ul>
                         <div class="link-top"></div>
@@ -54,11 +54,26 @@
                         <p style="color:grey">加载中...</p>
                     </div>
                 </div>
-                <div class="middleTitle" v-for=" (item,index) in getMiddlecontent" :key="index">
+                <div v-if="middlecontent == ''" class="middleTitle">
+                    <p>{{noDateTips}}</p>
+                </div>
+                <div v-else class="middleTitle" v-for=" (item,index) in getMiddlecontent" :key="index">
                     <div class="middleTitleleft">
-                        <img :src="item.headimg" class="middle-user-avater">
+                        <router-link :to="{path:`/${item.uname}`}"><img :src="item.headimg" class="middle-user-avater"></router-link>
                     </div>
-                    <div class="middleTitleright">{{item.uname}}分享于{{item.dateTim}}</div>
+                    <div class="middleTitleright">
+                        <div class="middleTitlerightTop">
+                            {{item.uname}} <span style="font-weight:500">分享于</span>{{item.dateTim}}
+                        </div>
+                        <div class="middleTitlerightMiddle">
+                            <div class="titleLeft">
+                                <p style="font-weight:500">{{item.title}}</p>
+                            </div>
+                            <div class="starClick">
+                                <button>Star</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="home-body-right">da家好</div>
@@ -69,7 +84,6 @@
 <script>
 import myheader from '@/components/myHeader'
 import { selectClassification,addKind,getContentforKind } from '@/api/axios/utils'
-import { setTimeout } from 'timers';
 
 export default {
     name: 'home',
@@ -93,9 +107,11 @@ export default {
             kindOfadd: '',
             kind: '',
             activekind: '',
+            leftBoxul: '',
             middleloading: 'display:none',
             liactiveClass: 0,
-            middlecontent: []
+            middlecontent: '',
+            noDateTips: ''
         }
     },
     created() {
@@ -121,6 +137,9 @@ export default {
             getContentforKind(this.classificationbackups[0],this.uname).then( res => {
                 // var data = res.data[0].dateTim;
                 // console.log(data.split(' '));
+                if(res.data.length == 0) {
+                    this.noDateTips = '目前该分类没有任何分享，快去分享吧！';
+                }
                 this.middlecontent = res.data;
                 var now = String(new Date()).split(' ');
                 var nowYear = now[3];
@@ -128,18 +147,23 @@ export default {
                 var nowDay = now[2]
                 for(var data of this.middlecontent){
                     if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] == nowDay && data.dateTim.split(' ')[3] == nowYear) {
-                        data.dateTim = `${data.dateTim.split(' ')[4]}`;
+                        data.dateTim = ` ${data.dateTim.split(' ')[4]}`;
                     }else if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] != nowDay && data.dateTim.split(' ')[3] == nowYear) {
-                        data.dateTim = `${nowDay-data.dateTim.split(' ')[2]}天前`;
+                        data.dateTim = ` ${nowDay-data.dateTim.split(' ')[2]}天前`;
                     }else if(data.dateTim.split(' ')[1] != nowMonth && data.dateTim.split(' ')[3] == nowYear) {
-                        data.dateTim = `${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]}`;
+                        data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]}`;
                     }else if(data.dateTim.split(' ')[3] != nowYear) {
-                        data.dateTim = `${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
+                        data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
                     }
                 }
                 console.log(this.middlecontent);
                 this.middleloading = 'display:none';
             })
+        }).catch( error => {
+            this.headimg = require('../assets/nowifi.png');
+            this.$refs.headerChild.headimg = require('../assets/nowifi.png');
+            this.headpromptMsgleftbox = '请检查网络设置';
+            this.headpromptIsDisplayleftbox = true;
         })
     },
     methods: {
@@ -155,7 +179,10 @@ export default {
             })
         },
         showli(ev) {
+            // 当点击的时候禁止其他按钮点击
+            this.leftBoxul = 'pointer-events:none';
             // 事件委托,点击分类
+            this.middlecontent = '';
             var ev = ev || window.event;
             var target = ev.target || ev.srcElement;
             if(target.nodeName.toLowerCase() == 'a') {
@@ -163,6 +190,32 @@ export default {
                 this.activekind = value;
                 var index = this.classification.indexOf(value);
                 this.liactiveClass = index;
+                this.middleloading = '';
+                this.noDateTips = '';
+                getContentforKind(value,this.uname).then( res => {
+                    if(res.data.length == 0) {
+                        this.noDateTips = '目前该分类没有任何分享，快去分享吧！';
+                    }
+                    this.middlecontent = res.data;
+                    var now = String(new Date()).split(' ');
+                    var nowYear = now[3];
+                    var nowMonth = now[1];
+                    var nowDay = now[2]
+                    for(var data of this.middlecontent){
+                        if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] == nowDay && data.dateTim.split(' ')[3] == nowYear) {
+                            data.dateTim = ` ${data.dateTim.split(' ')[4]}`;
+                        }else if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] != nowDay && data.dateTim.split(' ')[3] == nowYear) {
+                            data.dateTim = ` ${nowDay-data.dateTim.split(' ')[2]}天前`;
+                        }else if(data.dateTim.split(' ')[1] != nowMonth && data.dateTim.split(' ')[3] == nowYear) {
+                            data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]}`;
+                        }else if(data.dateTim.split(' ')[3] != nowYear) {
+                            data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
+                        }
+                    }
+                    console.log(this.middlecontent);
+                    this.middleloading = 'display:none';
+                    this.leftBoxul = '';
+                })
             }
         },
         classificationSearch() {
@@ -421,7 +474,7 @@ header {
     justify-content: center;
     overflow: hidden;
     margin-right: 0.5rem;
-    background: rgb(250, 121, 121);
+    background: #f6f8fa;
 }
 .classificationADD {
     width: 98%;
@@ -632,6 +685,7 @@ header {
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
+    margin-bottom: 2rem;
 }
 .middle-user-avater {
     width: 2.5rem;
@@ -642,6 +696,51 @@ header {
     margin-right: 0.5rem;
     background: rgb(250, 121, 121);
     border-radius: 5px;
+}
+.middleTitleright {
+    margin-top: 1rem;
+    width: 100%;
+}
+.middleTitlerightTop {
+    
+}
+.middleTitlerightMiddle {
+    line-height: 100%;
+    margin-top: 0.5rem;
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    background: #fff;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.titleLeft {
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+}
+.starClick {
+    padding-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.starClick button {
+    height: 1.8rem;
+    background-color: #eff3f6;
+    color: #24292e;
+    font-weight: 500;
+    line-height: 1.8rem;
+    border: 1px solid #bbc2ca;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+.starClick button:hover {
+    background-color: #e7ebec;
+    border: 1px solid #82878d;
+}
+.starClick button:active {
+    box-shadow: 1px 1px 1px #999ea3 inset;
 }
 .home-body-right {
     height: 100%;

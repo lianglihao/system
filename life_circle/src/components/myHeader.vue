@@ -176,7 +176,7 @@ input:-ms-input-placeholder { color:#fff; }
     justify-content: center;
     overflow: hidden;
     margin-right: 0.5rem;
-    background: rgb(250, 121, 121);
+    /* background: #f6f8fa; */
 }
 .head-user a {
     color: #fff;

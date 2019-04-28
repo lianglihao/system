@@ -83,6 +83,8 @@ export async function selectClassification(uname) {
                 params: { username: uname }
             }).then(res => {
                 resolve(res);
+            }).catch( (error) =>{
+                reject(false);
             });
         });
     }
@@ -97,7 +99,7 @@ export async function addKind(uname,classification) {
             axios.post('/api/addClassification', {
                 username: uname,
                 classification: classification
-            }).then(res => {
+            }).then( res => {
                 resolve(res);
             });
         });
