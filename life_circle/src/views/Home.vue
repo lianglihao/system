@@ -333,8 +333,8 @@ export default {
                 var obj = this.middlecontent[index];
                 obj.isStar = 'Star';
                 var arr = obj.praiseUsers.split('**/');
-                var index = arr.indexOf(this.uname);
-                arr.splice(index,1);
+                var indexuname = arr.indexOf(this.uname);
+                arr.splice(indexuname,1);
                 obj.praiseUsers = arr.join('**/');
                 obj.star --;
                 this.$set(this.middlecontent,index,obj);
@@ -559,7 +559,7 @@ header {
 .classificationADD button {
     float: right;
     height: 2rem;
-    width: 23%;
+    width: 30%;
     background: #28a745;
     font-size: 0.8rem;
     font-weight: 500;
@@ -597,7 +597,7 @@ header {
 }
 .classificationADDonclick input {
     float: left;
-    width: 75%;
+    width: 65%;
     font-size: 1rem;
     font-weight: 500;
     height: 1.9rem;
@@ -612,7 +612,7 @@ header {
 .classificationADDonclick button {
     float: right;
     height: 2rem;
-    width: 23%;
+    width: 30%;
     background: #28a745;
     font-size: 0.8rem;
     font-weight: 500;
@@ -906,6 +906,12 @@ input:-ms-input-placeholder { color:rgb(129, 126, 126); font-size: 0.8rem; }
         position: relative;
         min-height: 0;
         background-color: #f6f8fa;
+    }
+    .classificationADD button {
+        width: 23%;
+    }
+    .classificationADDonclick button {
+        width: 23%;
     }
     .home-body-left .left-box {
         width: 90%;
