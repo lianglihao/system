@@ -3,16 +3,15 @@
         <header>
             <myheader ref="headerChild" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
-        <div class="external-headpromptleftbox">
-                        <div class="headpromptleftbox" :class="{headpromptdisplayleftbox:headpromptIsDisplayleftbox,headpromptsucessleftbox:headPromptsucessleftbox}">
-                            <span>{{headpromptMsgleftbox}}</span>
-                            <button @click="closeHeadpromptleftbox">X</button>
-                        </div>
-                    </div>
+        <div class="external-headpromptleftbox" :style="promptbox">
+            <div class="headpromptleftbox" :class="{headpromptdisplayleftbox:headpromptIsDisplayleftbox,headpromptsucessleftbox:headPromptsucessleftbox}">
+                <span>{{headpromptMsgleftbox}}</span>
+                <button @click="closeHeadpromptleftbox">X</button>
+            </div>
+        </div>
         <div class="home-body allbgcolor" ref="homebody">
             <div class="home-body-left" id="boxFixed" :class="{'isFixed':isFixed}">
                 <div class="left-box">
-                    
                     <div class="head-user-avater-uname">
                         <div class="head-user-avater-unameleft">
                             <img :src="headimg"  class="head-user-avater"  :alt="uname">
@@ -57,22 +56,38 @@
                 <div v-if="middlecontent == ''" class="middleTitle">
                     <p>{{noDateTips}}</p>
                 </div>
-                <div v-else class="middleTitle" v-for=" (item,index) in getMiddlecontent" :key="index">
-                    <div class="middleTitleleft">
-                        <router-link :to="{path:`/${item.uname}`}"><img :src="item.headimg" class="middle-user-avater"></router-link>
+                <div v-else class="middleTitle">
+                    <div v-for=" (item,index) in getMiddlecontent" :key="index">
+                        <div class="middleTitleTop">
+                            <div class="middleTitleleft">
+                                <router-link :to="{path:`/${item.uname}`}"><img :src="item.headimg" class="middle-user-avater"></router-link>
+                            </div>
+                            <div class="middleTitleright">
+                                <div class="middleTitlerightTop">
+                                    {{item.uname}} <span style="font-weight:500">分享于</span>{{item.dateTim}}
+                                </div>
+                                <div class="middleTitlerightMiddle">
+                                    <div class="middleTitlerightMiddleTop">
+                                        <div class="titleLeft">
+                                            <p style="font-weight:500">{{item.title}}</p>
+                                        </div>
+                                        <div class="starClick">
+                                            <button @click="starorunstar(index)"><img src="../assets/home/star__.svg" width="15"><span>{{item.isStar}}</span></button>
+                                        </div>
+                                    </div>
+                                    <div class="middleTitlerightMiddleBottom">
+                                        <div :style="item.color" class="circular"></div>
+                                        <router-link :to="{path:'/'}">{{item.kind}}</router-link>
+                                        <img src="../assets/home/star__.svg" width="16" height="16" style="margin-left:4%">
+                                        <p style="margin-left:8px;margin-top: 2px;">{{item.star}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="middlecontentDivide"></div>
                     </div>
-                    <div class="middleTitleright">
-                        <div class="middleTitlerightTop">
-                            {{item.uname}} <span style="font-weight:500">分享于</span>{{item.dateTim}}
-                        </div>
-                        <div class="middleTitlerightMiddle">
-                            <div class="titleLeft">
-                                <p style="font-weight:500">{{item.title}}</p>
-                            </div>
-                            <div class="starClick">
-                                <button>Star</button>
-                            </div>
-                        </div>
+                    <div class="middlefooter">
+                        <p class="foo">&copy; 2018-2019 Lifr_Circle <a href="https://github.com/lianglihao" title="开发者github" target="_blank">开发者：LHJs</a>  <a href="http://www.miitbeian.gov.cn" title="工信部首页链接" target="_blank">浙ICP备18051718号-1</a></p>
                     </div>
                 </div>
             </div>
@@ -83,7 +98,8 @@
 
 <script>
 import myheader from '@/components/myHeader'
-import { selectClassification,addKind,getContentforKind } from '@/api/axios/utils'
+import { selectClassification,addKind,getContentforKind,additionOrsubtractionStar } from '@/api/axios/utils'
+import { randomColors } from '@/api/simpleTools/utils'
 
 export default {
     name: 'home',
@@ -92,6 +108,7 @@ export default {
     },
     data() { 
         return {
+            promptbox: 'z-index:-10',//解决头部提示，占用页面无法点击input框的bug
             headuseravaterunamerightmsg: '',
             headpromptMsgleftbox: '',
             headpromptIsDisplayleftbox: false,
@@ -111,7 +128,7 @@ export default {
             middleloading: 'display:none',
             liactiveClass: 0,
             middlecontent: '',
-            noDateTips: ''
+            noDateTips: '',
         }
     },
     created() {
@@ -146,6 +163,13 @@ export default {
                 var nowMonth = now[1];
                 var nowDay = now[2]
                 for(var data of this.middlecontent){
+                    data.color = randomColors();
+                    var isStar = data.praiseUsers.split('**/');
+                    if(isStar.indexOf(this.uname) != -1) {
+                        data.isStar = 'Unstar';
+                    }else {
+                        data.isStar = 'Star';
+                    }
                     if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] == nowDay && data.dateTim.split(' ')[3] == nowYear) {
                         data.dateTim = ` ${data.dateTim.split(' ')[4]}`;
                     }else if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] != nowDay && data.dateTim.split(' ')[3] == nowYear) {
@@ -156,13 +180,14 @@ export default {
                         data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
                     }
                 }
-                console.log(this.middlecontent);
                 this.middleloading = 'display:none';
+                console.log(this.middlecontent);
             })
         }).catch( error => {
             this.headimg = require('../assets/nowifi.png');
             this.$refs.headerChild.headimg = require('../assets/nowifi.png');
             this.headpromptMsgleftbox = '请检查网络设置';
+            this.promptbox = '';
             this.headpromptIsDisplayleftbox = true;
         })
     },
@@ -202,6 +227,13 @@ export default {
                     var nowMonth = now[1];
                     var nowDay = now[2]
                     for(var data of this.middlecontent){
+                        data.color = randomColors();
+                        var isStar = data.praiseUsers.split('**/');
+                        if(isStar.indexOf(this.uname) != -1) {
+                            data.isStar = 'Unstar';
+                        }else {
+                            data.isStar = 'Star';
+                        }
                         if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] == nowDay && data.dateTim.split(' ')[3] == nowYear) {
                             data.dateTim = ` ${data.dateTim.split(' ')[4]}`;
                         }else if(data.dateTim.split(' ')[1] == nowMonth && data.dateTim.split(' ')[2] != nowDay && data.dateTim.split(' ')[3] == nowYear) {
@@ -212,7 +244,6 @@ export default {
                             data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
                         }
                     }
-                    console.log(this.middlecontent);
                     this.middleloading = 'display:none';
                     this.leftBoxul = '';
                 })
@@ -244,6 +275,7 @@ export default {
         },
         addClassification() {
             if(this.kindOfadd == ''){
+                this.promptbox = '';
                 this.headpromptMsgleftbox = '请输入需要添加的类别'
                 this.headpromptIsDisplayleftbox = true;
                 this.$refs.addclassification.focus();
@@ -252,6 +284,7 @@ export default {
                     return item == this.kindOfadd;
                 })
                 if(result != null && result.length > 0) {
+                    this.promptbox = '';
                     this.headpromptMsgleftbox = '已经存在与新增相同类别'
                     this.headpromptIsDisplayleftbox = true;
                     this.$refs.addclassification.focus();
@@ -259,17 +292,17 @@ export default {
                     var oldclassificationbackups = this.classificationbackups;
                     this.classificationbackups.push(this.kindOfadd);
                     var classification = this.classificationbackups.join('**/');
-                    console.log(classification);
-                    console.log(this.classificationbackups);
                     addKind(this.uname,classification).then( res => {
                         if(res.status = 200) {
                             this.classification = this.classificationbackups;
+                            this.promptbox = '';
                             this.headPromptsucessleftbox = true;
                             this.headpromptIsDisplayleftbox = true;
                             this.headpromptMsgleftbox = '增加新类别成功';
                             this.classificationADDonclick = false;
                         }else {
                             this.classificationbackups = oldclassificationbackups;
+                            this.promptbox = '';
                             this.headpromptIsDisplayleftbox = true;
                             this.headpromptMsgleftbox = '由于网络波动或其他原因，请求失败';
                             this.$refs.addclassification.focus();
@@ -279,8 +312,37 @@ export default {
             }
         },
         closeHeadpromptleftbox() {
+            this.promptbox = 'z-index:-10';
             this.headpromptIsDisplayleftbox = false;
         },
+        starorunstar(index) {
+            if(this.middlecontent[index].isStar == 'Star'){
+                var obj = this.middlecontent[index];
+                obj.isStar = 'Unstar';
+                if(obj.star == 0) {
+                    obj.praiseUsers = this.uname;
+                }else {
+                    obj.praiseUsers = obj.praiseUsers.concat(`**/${this.uname}`);
+                }
+                obj.star ++;
+                this.$set(this.middlecontent,index,obj);
+                additionOrsubtractionStar(obj.star,obj.praiseUsers,obj.id).then( res => {
+                    console.log(res);
+                })
+            }else {
+                var obj = this.middlecontent[index];
+                obj.isStar = 'Star';
+                var arr = obj.praiseUsers.split('**/');
+                var index = arr.indexOf(this.uname);
+                arr.splice(index,1);
+                obj.praiseUsers = arr.join('**/');
+                obj.star --;
+                this.$set(this.middlecontent,index,obj);
+                additionOrsubtractionStar(obj.star,obj.praiseUsers,obj.id).then( res => {
+                    console.log(res);
+                })
+            }
+        }
     },
     computed:{
         getMiddlecontent() {
@@ -295,10 +357,12 @@ export default {
         headpromptIsDisplayleftbox: function() {
             if(this.headpromptIsDisplayleftbox == true) {
                 setTimeout( () => {
+                    this.promptbox = 'z-index:-10';
                     this.headpromptIsDisplayleftbox = false;
                 },2000)
             if(this.headPromptsucessleftbox == true) {
                 setTimeout( () => {
+                    this.promptbox = 'z-index:-10';
                     this.headPromptsucessleftbox = false;
                 },2000)
                 }
@@ -679,17 +743,22 @@ header {
   }
 }
 .middleTitle {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+}
+.middleTitleTop {
     width: 90%;
-    background: #00B4FF;
     margin: 0 auto;
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
-    margin-bottom: 2rem;
 }
 .middle-user-avater {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     align-items: center;
     justify-content: center;
     overflow: hidden;
@@ -698,23 +767,54 @@ header {
     border-radius: 5px;
 }
 .middleTitleright {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     width: 100%;
 }
 .middleTitlerightTop {
     
 }
 .middleTitlerightMiddle {
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
     line-height: 100%;
     margin-top: 0.5rem;
     width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+}
+.middleTitlerightMiddleTop {
     display: flex;
     display: -webkit-flex;
     background: #fff;
     flex-direction: row;
     justify-content: space-between;
 }
+.middleTitlerightMiddleBottom {
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    align-items: center;
+}
+.middleTitlerightMiddleBottom div {
+    margin-left: 1rem;
+}
+.middleTitlerightMiddleBottom a {
+    text-decoration: none;
+    color: black;
+    font-weight: 400;
+    margin-left: 8px;
+}
+.circular {
+    height: 0.8rem;
+    width: 0.8rem;
+    border-radius: 50%;
+}
 .titleLeft {
+    max-width: 70%;
     padding-top: 1rem;
     padding-left: 1rem;
     padding-bottom: 1rem;
@@ -725,15 +825,18 @@ header {
     padding-bottom: 1rem;
 }
 .starClick button {
-    height: 1.8rem;
+    height: 30px;
+    font-size: 0.8rem;
     background-color: #eff3f6;
     color: #24292e;
     font-weight: 500;
-    line-height: 1.8rem;
     border: 1px solid #bbc2ca;
     border-radius: 5px;
     outline: none;
     cursor: pointer;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
 }
 .starClick button:hover {
     background-color: #e7ebec;
@@ -741,6 +844,27 @@ header {
 }
 .starClick button:active {
     box-shadow: 1px 1px 1px #999ea3 inset;
+}
+.middlecontentDivide {
+    margin: 0 auto;
+    width: 90%;
+    height: 1px;
+    border-top: solid #d1d5da 1px;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+.middlefooter {
+    width: 100%;
+    color: black;
+    text-align: center;
+    margin: 0 auto;
+    height: 2rem;
+}
+.middlefooter a {
+    color: black;
+    text-decoration: none;
+    margin-left:5px; 
 }
 .home-body-right {
     height: 100%;

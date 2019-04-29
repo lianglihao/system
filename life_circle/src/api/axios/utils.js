@@ -121,6 +121,20 @@ export function getContentforKind(kind,uname) {
     })
 }
 
+export function additionOrsubtractionStar(star,praiseUsers,id) {
+    return new Promise( (resolve,reject) => {
+        axios.post('/api/isStar', {
+            star: star,
+            praiseUsers: praiseUsers,
+            id: id
+        }).then( res => {
+            resolve(res);
+        }).catch( error => {
+            reject(error);
+        })
+    })
+}
+
 // module.exports = {
 //     Userlogin: Userlogin,
 //     Userregistration: Userregistration

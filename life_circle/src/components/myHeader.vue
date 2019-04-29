@@ -9,7 +9,7 @@
         </div>
         <div class="head-item" :class="{displayhiding:display}">
             <div class="searchinput">
-                <input type="text" value="" placeholder="Search or jump to...">
+                <input @blur="loseFocus" type="text" value="" placeholder="Search or jump to...">
             </div>
             <div class="link-top"></div>
             <nav class="head-item-nav">
@@ -48,7 +48,7 @@ export default {
             // headimg: require('../assets/draw.png'),//引入图片
             headimg: localStorage.getItem('headimg'),
             uname: localStorage.getItem('uname'),
-            display: true
+            display: true,
         }
     },
     methods: {
@@ -69,6 +69,9 @@ export default {
             localStorage.removeItem('uname');
             localStorage.removeItem('headimg');
             this.$router.replace({name:"login"});
+        },
+        loseFocus() {
+            console.log(111);
         }
     }
 }
@@ -117,12 +120,15 @@ export default {
     color: #fff;
     text-indent: 0.4rem;
     margin-right: 1rem;
-    transition: width 0.5s;
 }
 .head-item .searchinput input:focus {
     color: black;
     background-color: #fff;
     width: 15rem;
+    transition: width 0.5s;
+}
+.head-item .onblur input {
+    width: 20rem;
     transition: width 0.5s;
 }
 .head-item-nav {
@@ -280,6 +286,7 @@ input:-ms-input-placeholder { color:#fff; }
     }
 }
 .displayhiding {
+    /* 隐藏头部展开元素 */
     display: none;
 }
 @media (min-width: 1013px) {

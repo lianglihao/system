@@ -1,6 +1,6 @@
 <template>
     <div class="myfooter">
-            <p class="foo">&copy; 2018-2019 Lifr_Circle <a href="https://github.com/lianglihao" title="开发者github" target="_blank">开发者：LHJs</a>  <a href="http://www.miitbeian.gov.cn" title="工信部首页链接" target="_blank">浙ICP备18051718号-1</a></p>
+        <p class="foo">&copy; 2018-2019 Lifr_Circle <a href="https://github.com/lianglihao" title="开发者github" target="_blank">开发者：LHJs</a>  <a href="http://www.miitbeian.gov.cn" title="工信部首页链接" target="_blank">浙ICP备18051718号-1</a></p>
     </div>
 </template>
 
