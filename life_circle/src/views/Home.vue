@@ -1,5 +1,6 @@
 <template>
-    <div class="home">
+    <div class="home" :style="home">
+        <confirmationmessage :style="confirmationmessage" :confirmationmessagecl="confirmationmessagecl"></confirmationmessage>
         <header>
             <myheader ref="headerChild" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
@@ -57,6 +58,7 @@
                     <p>{{noDateTips}}</p>
                 </div>
                 <div v-else class="middleTitle">
+                    <button @click="deletekind">删除</button>
                     <div v-for=" (item,index) in getMiddlecontent" :key="index">
                         <div class="middleTitleTop">
                             <div class="middleTitleleft">
@@ -98,6 +100,7 @@
 
 <script>
 import myheader from '@/components/myHeader'
+import confirmationmessage from '@/components/confirmationmessage'
 import { selectClassification,addKind,getContentforKind,additionOrsubtractionStar } from '@/api/axios/utils'
 import { randomColors } from '@/api/simpleTools/utils'
 
@@ -105,9 +108,13 @@ export default {
     name: 'home',
     components: {
         myheader: myheader,
+        confirmationmessage: confirmationmessage
     },
     data() { 
         return {
+            home: '',
+            confirmationmessage: 'visibility: hidden',
+            confirmationmessagecl: '',
             promptbox: 'z-index:-10',//解决头部提示，占用页面无法点击input框的bug
             headuseravaterunamerightmsg: '',
             headpromptMsgleftbox: '',
@@ -316,6 +323,7 @@ export default {
             this.headpromptIsDisplayleftbox = false;
         },
         starorunstar(index) {
+            // 点击喜欢或者取消喜欢
             if(this.middlecontent[index].isStar == 'Star'){
                 var obj = this.middlecontent[index];
                 obj.isStar = 'Unstar';
@@ -342,6 +350,11 @@ export default {
                     console.log(res);
                 })
             }
+        },
+        deletekind() {
+            this.confirmationmessage = '';
+            this.confirmationmessagecl = 'visibility: visible;top: 30%;transition: all 0.3s linear;opacity: 1;';
+            this.home = 'position:fixed;width:100%;';
         }
     },
     computed:{
@@ -451,10 +464,6 @@ export default {
 }
 .headpromptsucessleftbox button:hover {
   color: #16ad3c;
-}
-.headpromptdisplayleftbox {
-  transform: translateY(0);
-  transition: transform 0.6s;
 }
 .headpromptdisplayleftbox {
   transform: translateY(0);
