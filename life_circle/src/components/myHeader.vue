@@ -14,15 +14,18 @@
             <div class="link-top"></div>
             <nav class="head-item-nav">
                 <router-link :to="{path:'/'}">
-                    首页
+                    <!-- 首页 -->
+                    {{firstpage}}
                 </router-link>
                 <div class="link-top"></div>
                 <router-link :to="{path:'/author/aboutauthor'}">
-                    添加
+                    <!-- 添加 -->
+                    {{add}}
                 </router-link>
                 <div class="link-top"></div>
                 <router-link :to="{path:'/author/aboutauthor'}">
-                    关于作者
+                    <!-- 关于作者 -->
+                    {{aboutauthor}}
                 </router-link>
                 <div class="link-top"></div>
             </nav>
@@ -50,6 +53,11 @@ export default {
             uname: localStorage.getItem('uname'),
             display: true,
         }
+    },
+    props: {
+        firstpage: String,
+        add: String,
+        aboutauthor: String
     },
     methods: {
         changeDisplay() {

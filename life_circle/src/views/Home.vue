@@ -2,7 +2,7 @@
     <div class="home" :style="home">
         <confirmationmessage :style="confirmationmessage" :confirmationmessagecl="confirmationmessagecl"></confirmationmessage>
         <header>
-            <myheader ref="headerChild" v-on:headhanbao="headhanbaoshow"></myheader>
+            <myheader ref="headerChild" v-bind="head" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
         <div class="external-headpromptleftbox" :style="promptbox">
             <div class="headpromptleftbox" :class="{headpromptdisplayleftbox:headpromptIsDisplayleftbox,headpromptsucessleftbox:headPromptsucessleftbox}">
@@ -112,6 +112,11 @@ export default {
     },
     data() { 
         return {
+            head: {
+                firstpage: '首页',
+                add: '添加',
+                aboutauthor: '关于作者'
+            },
             home: '',
             confirmationmessage: 'visibility: hidden',
             confirmationmessagecl: '',
@@ -144,7 +149,7 @@ export default {
     mounted() {
         this.uname = this.$refs.headerChild.uname;
         this.headimg = this.$refs.headerChild.headimg;
-        //获取myHeader组件内的uname（用户名）和headimg（用户头像）信息
+        // 获取myHeader组件内的uname（用户名）和headimg（用户头像）信息
         // console.log(this.$refs.homebody.getBoundingClientRect())
         // console.log(this.$refs.homebody.offsetTop)
         // 获取某元素距离浏览器的距离
