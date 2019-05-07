@@ -90,7 +90,6 @@ export default {
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
-    /* flex-wrap: nowrap; */
     align-items: center;
     flex-wrap: wrap;
 }
