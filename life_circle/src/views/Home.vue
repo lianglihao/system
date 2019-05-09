@@ -141,6 +141,9 @@ export default {
             liactiveClass: 0,
             middlecontent: '',
             noDateTips: '',
+            // test: {
+            //     a:1
+            // }
         }
     },
     created() {
@@ -368,7 +371,19 @@ export default {
         }
     },
     watch: {
-        kind: function() {
+        // test: {
+        //     handler:function(aaa) {
+        //         console.log(aaa.a,2222)
+        //     },
+        //     deep:true
+        // },
+        // 'test.a':function(aaa){
+        //     console.log(aaa,222)
+        // },
+        kind: function(aaa,bbb) {
+            console.log(aaa,bbb)
+            this.test.a = aaa;
+            console.log(this.test.a,111)
             // 监听搜索框输入的变化，调用classificationSearch()方法进行模糊查询分类
             this.classificationSearch();
         },
