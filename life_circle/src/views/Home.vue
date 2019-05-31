@@ -4,12 +4,13 @@
         <header>
             <myheader ref="headerChild" v-bind="head" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
-        <div class="external-headpromptleftbox" :style="promptbox">
+        <!-- <div class="external-headpromptleftbox" :style="promptbox">
             <div class="headpromptleftbox" :class="{headpromptdisplayleftbox:headpromptIsDisplayleftbox,headpromptsucessleftbox:headPromptsucessleftbox}">
                 <span>{{headpromptMsgleftbox}}</span>
                 <button @click="closeHeadpromptleftbox">X</button>
             </div>
-        </div>
+        </div> -->
+        <upperMiddleMessageTips :promptbox="promptbox" :headpromptIsDisplayleftbox="headpromptIsDisplayleftbox" :headPromptsucessleftbox="headPromptsucessleftbox" :headpromptMsgleftbox="headpromptMsgleftbox" v-on:closeHeadpromptleftbox="closeHeadpromptleftbox"></upperMiddleMessageTips>
         <div class="home-body allbgcolor" ref="homebody">
             <div class="home-body-left" id="boxFixed" :class="{'isFixed':isFixed}">
                 <div class="left-box">
@@ -30,7 +31,7 @@
                         </div>
                         <div class="classificationADDonclickbox" :class="{classificationADDonclickboxPosition:classificationADDonclick}">
                             <div class="classificationADDonclick" :class="{classificationADDonclickboxTransform:classificationADDonclick}">
-                                <input ref="addclassification" v-model="kindOfadd" type="text" placeholder="Add a classification...">
+                                <input ref="addclassification" v-model="kindOfadd" type="text" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;" placeholder="Add a classification...">
                                 <button @click="addClassification">Add</button>
                             </div>
                         </div>
@@ -54,11 +55,13 @@
                         <p style="color:grey">加载中...</p>
                     </div>
                 </div>
+                <div v-show="isdeletekind">
+                    <button @click="deletekind">删除</button>
+                </div>
                 <div v-if="middlecontent == ''" class="middleTitle">
                     <p>{{noDateTips}}</p>
                 </div>
                 <div v-else class="middleTitle">
-                    <button @click="deletekind">删除</button>
                     <div v-for=" (item,index) in getMiddlecontent" :key="index">
                         <div class="middleTitleTop">
                             <div class="middleTitleleft">
@@ -101,6 +104,7 @@
 <script>
 import myheader from '@/components/myHeader'
 import confirmationmessage from '@/components/confirmationmessage'
+import upperMiddleMessageTips from '@/components/upperMiddleMessageTips'
 import { selectClassification,addKind,getContentforKind,additionOrsubtractionStar } from '@/api/axios/utils'
 import { randomColors } from '@/api/simpleTools/utils'
 
@@ -108,7 +112,8 @@ export default {
     name: 'home',
     components: {
         myheader: myheader,
-        confirmationmessage: confirmationmessage
+        confirmationmessage: confirmationmessage,
+        upperMiddleMessageTips: upperMiddleMessageTips
     },
     data() { 
         return {
@@ -141,6 +146,7 @@ export default {
             liactiveClass: 0,
             middlecontent: '',
             noDateTips: '',
+            isdeletekind: false
             // test: {
             //     a:1
             // }
@@ -195,6 +201,7 @@ export default {
                         data.dateTim = ` ${data.dateTim.split(' ')[2]} ${ data.dateTim.split(' ')[1]} ${ data.dateTim.split(' ')[3]}`;
                     }
                 }
+                this.isdeletekind = true;
                 this.middleloading = 'display:none';
                 console.log(this.middlecontent);
             })
@@ -219,6 +226,7 @@ export default {
             })
         },
         showli(ev) {
+            this.isdeletekind = false;
             // 当点击的时候禁止其他按钮点击
             this.leftBoxul = 'pointer-events:none';
             // 事件委托,点击分类
@@ -261,6 +269,7 @@ export default {
                     }
                     this.middleloading = 'display:none';
                     this.leftBoxul = '';
+                    this.isdeletekind = true;
                 })
             }
         },
@@ -308,6 +317,7 @@ export default {
                     this.classificationbackups.push(this.kindOfadd);
                     var classification = this.classificationbackups.join('**/');
                     addKind(this.uname,classification).then( res => {
+                        console.log(res.status);
                         if(res.status = 200) {
                             this.classification = this.classificationbackups;
                             this.promptbox = '';
@@ -315,6 +325,7 @@ export default {
                             this.headpromptIsDisplayleftbox = true;
                             this.headpromptMsgleftbox = '增加新类别成功';
                             this.classificationADDonclick = false;
+                            console.log('success');
                         }else {
                             this.classificationbackups = oldclassificationbackups;
                             this.promptbox = '';
@@ -382,8 +393,8 @@ export default {
         // },
         kind: function(aaa,bbb) {
             console.log(aaa,bbb)
-            this.test.a = aaa;
-            console.log(this.test.a,111)
+            // this.test.a = aaa;
+            // console.log(this.test.a,111)
             // 监听搜索框输入的变化，调用classificationSearch()方法进行模糊查询分类
             this.classificationSearch();
         },
@@ -420,7 +431,7 @@ export default {
 .allbgcolor {
     background-color: #f6f8fa;
 }
-.external-headpromptleftbox {
+/* .external-headpromptleftbox {
   position: absolute;
   width: 100%;
   height: 40px;
@@ -430,8 +441,8 @@ export default {
   justify-content: center;
   overflow: hidden;
   z-index: 1000;
-}
-.headpromptleftbox {
+} */
+/* .headpromptleftbox {
   padding-left: 10px; 
   box-sizing: border-box;
   position: absolute;
@@ -448,7 +459,6 @@ export default {
   transform: translateY(-100%);
 }
 .headpromptleftbox button {
-  /* margin-left: 7%; */
   outline: none;
   background: rgba(0, 0, 0, 0);
   cursor: pointer;
@@ -457,8 +467,8 @@ export default {
 }
 .headpromptleftbox button:hover {
   color: #86181d;
-}
-.headpromptsucessleftbox {
+} */
+/* .headpromptsucessleftbox {
   padding-left: 10px; 
   box-sizing: border-box;
   position: absolute;
@@ -475,7 +485,6 @@ export default {
   transform: translateY(-100%);
 }
 .headpromptsucessleftbox button {
-  /* margin-left: 7%; */
   outline: none;
   background: rgba(0, 0, 0, 0);
   cursor: pointer;
@@ -484,11 +493,11 @@ export default {
 }
 .headpromptsucessleftbox button:hover {
   color: #16ad3c;
-}
-.headpromptdisplayleftbox {
+} */
+/* .headpromptdisplayleftbox {
   transform: translateY(0);
   transition: transform 0.6s;
-}
+} */
 .home {
     width: 100%;
 }
@@ -738,6 +747,7 @@ header {
     width: 10%;
     margin: 1rem;
     animation: App-logo infinite 2s linear;
+    /* infinite 动画循环无数次 linear 全程匀速 */
 }
 @keyframes App-logo {
   from {
@@ -747,7 +757,7 @@ header {
     transform: rotate(360deg);
   }
 }
-@-moz-keyframes App-logo {
+@-moz-keyframes App-logo {  /* Firefox */
   from {
     transform: rotate(0deg);
   }
@@ -755,7 +765,7 @@ header {
     transform: rotate(360deg);
   }
 }
-@-webkit-keyframes App-logo {
+@-webkit-keyframes App-logo {  /* Safari and Chrome */
   from {
     transform: rotate(0deg);
   }
@@ -763,7 +773,7 @@ header {
     transform: rotate(360deg);
   }
 }
-@-o-keyframes App-logo {
+@-o-keyframes App-logo {  /* Opera */
   from {
     transform: rotate(0deg);
   }
