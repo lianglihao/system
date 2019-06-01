@@ -102,9 +102,9 @@
 </template>
 
 <script>
-import myheader from '@/components/myHeader'
+import myheader from '@/components/currency/myHeader'
 import confirmationmessage from '@/components/confirmationmessage'
-import upperMiddleMessageTips from '@/components/upperMiddleMessageTips'
+import upperMiddleMessageTips from '@/components/currency/upperMiddleMessageTips'
 import { selectClassification,addKind,getContentforKind,additionOrsubtractionStar } from '@/api/axios/utils'
 import { randomColors } from '@/api/simpleTools/utils'
 

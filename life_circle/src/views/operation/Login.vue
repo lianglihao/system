@@ -78,7 +78,7 @@
 
 <script>
 // @ is an alias to /src
-import myfooter from '@/components/myFooter'
+import myfooter from '@/components/currency/myFooter'
 import { Userlogin,Userregistration } from '@/api/axios/utils'
 
 export default {
@@ -129,14 +129,14 @@ export default {
       }
     },
     login() {
-      if(this.loginUname == '' || this.loginUpassword == ''){
+      if(this.loginUname == '' || this.loginUname == null || this.loginUpassword == ''){
         this.headprompt = 'headprompt';
         this.headpromptIsDisplay = true;
         this.headpromptMsg = 'account or password cannot be empty.';
-        if(this.loginUname == '') {
+        if(this.loginUname == '' || this.loginUname == null) {
           this.$refs.loginUname.focus();
           //配合input标签ref属性使用
-        }else if(this.loginUname != '' && this.loginUpassword == '') {
+        }else {
           this.$refs.loginUpassword.focus();
         }
       }else {
@@ -284,11 +284,12 @@ export default {
 }
 .headprompt button {
   /* margin-left: 7%; */
+  margin-top: 5%;
   outline: none;
   background: rgba(0, 0, 0, 0);
   cursor: pointer;
   border: none;
-  color: #86181da6
+  color: rgba(134,24,29,0.9);
 }
 .headprompt button:hover {
   color: #86181d;
@@ -315,7 +316,7 @@ export default {
   background: rgba(0, 0, 0, 0);
   cursor: pointer;
   border: none;
-  color: #16ad3cb0;
+  color: rgba(22,173,60,0.69);
 }
 .headpromptsucess button:hover {
   color: #16ad3c;

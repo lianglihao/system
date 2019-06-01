@@ -2,10 +2,10 @@
     <div class="myheader">
         <div class="head-logo">
            <router-link :to="{name:'login'}">
-               <img src="../assets/draw.png" alt="">
+               <img src="../../assets/draw.png" alt="">
            </router-link>
            <!-- <button class="menu" @click="changeDisplay">显示</button> -->
-           <img src="../assets/myheader/menu.svg" class="menu" @click="changeDisplay" alt="" >
+           <img src="../../assets/myheader/menu.svg" class="menu" @click="changeDisplay" alt="" >
         </div>
         <div class="head-item" :class="{displayhiding:display}">
             <div class="searchinput">
