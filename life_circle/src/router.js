@@ -31,6 +31,12 @@ export default new Router({
       // component: () => import('./views/author/AboutAuthor')
       component: (resolve) => require(['./views/author/AboutAuthor'],resolve)
     },
+    {
+      path: '/confirmationmessage',
+      name: 'confirmationmessage',
+      // component: () => import('./views/author/AboutAuthor')
+      component: (resolve) => require(['./components/currency/confirmationmessage'],resolve)
+    },
     {path:'*',redirect: "/"}
   ]
 })

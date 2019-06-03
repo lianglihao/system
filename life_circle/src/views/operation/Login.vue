@@ -41,8 +41,7 @@
               </div>
               <button :style="loginBtn" class="loginButton" :class="loginLoding" :disabled="disabled">
                 <span>登录</span>
-                <!-- <img src="../../assets/go.png" alt=""> -->
-                <img src="../../assets/go.png" alt="" >
+                <img src="../../assets/login/go.png" alt="" >
               </button>
             </form>
           </div>
@@ -59,7 +58,7 @@
               </div>
               <button :style="loginBtn" class="loginButton" :class="loginLoding" :disabled="disabled">
                 <span>注册</span>
-                <img src="../../assets/go.png" alt="">
+                <img src="../../assets/login/go.png" alt="">
               </button>
             </form>
           </div>
@@ -329,7 +328,7 @@ export default {
   height: 100vh;
   width: 100%;
   background: rgba(0,0,0,0.5);
-  background-image: url(../../assets/login_bg.jpg);
+  background-image: url(../../assets/login/login_bg.jpg);
   position:fixed;
   top: 0;
   left: 0;

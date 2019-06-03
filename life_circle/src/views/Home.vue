@@ -1,15 +1,9 @@
 <template>
     <div class="home" :style="home">
-        <confirmationmessage :style="confirmationmessage" :confirmationmessagecl="confirmationmessagecl"></confirmationmessage>
+        <confirmationmessage :style="confirmationmessage" :confirmationmessagecl="confirmationmessagecl" v-on:confirmationmessageCancel="confirmationmessageCancel"></confirmationmessage>
         <header>
             <myheader ref="headerChild" v-bind="head" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
-        <!-- <div class="external-headpromptleftbox" :style="promptbox">
-            <div class="headpromptleftbox" :class="{headpromptdisplayleftbox:headpromptIsDisplayleftbox,headpromptsucessleftbox:headPromptsucessleftbox}">
-                <span>{{headpromptMsgleftbox}}</span>
-                <button @click="closeHeadpromptleftbox">X</button>
-            </div>
-        </div> -->
         <upperMiddleMessageTips :promptbox="promptbox" :headpromptIsDisplayleftbox="headpromptIsDisplayleftbox" :headPromptsucessleftbox="headPromptsucessleftbox" :headpromptMsgleftbox="headpromptMsgleftbox" v-on:closeHeadpromptleftbox="closeHeadpromptleftbox"></upperMiddleMessageTips>
         <div class="home-body allbgcolor" ref="homebody">
             <div class="home-body-left" id="boxFixed" :class="{'isFixed':isFixed}">
@@ -39,7 +33,9 @@
                             <input v-model="kind" type="text" placeholder="Find a classification...">
                         </div>
                         <ul :style="leftBoxul" class="classificationContent" @click="showli">
-                            <li v-for="(item,index) in this.classification" :key="index"><router-link :to="{path:'/'}"><img width="23" height="23" src="../assets/home/classification.svg">{{item}}</router-link><span style="float:right" :class="liactiveClass == index ? 'liactive' : '' "></span></li>
+                            <li v-for="(item,index) in this.classification" :key="index" class="linoactive" :class="[liactiveClass == index ? 'liactive' : '']" >
+                                <router-link :to="{path:'/'}"><img :alt="item" width="23" height="23" src="../assets/home/classification.svg">{{item}}</router-link>
+                            </li>
                         </ul>
                         <div class="link-top"></div>
                         <div class="left-box-end">
@@ -55,8 +51,9 @@
                         <p style="color:grey">加载中...</p>
                     </div>
                 </div>
-                <div v-show="isdeletekind">
-                    <button @click="deletekind">删除</button>
+                <div class="suspensionbtn" v-show="isdeletekind">
+                    <suspension suspensionbtn='delete' @click.native="deletekind" style="margin-right:10px;">删除分类</suspension>
+                    <suspension suspensionbtn='add'>新的分享</suspension>
                 </div>
                 <div v-if="middlecontent == ''" class="middleTitle">
                     <p>{{noDateTips}}</p>
@@ -103,17 +100,19 @@
 
 <script>
 import myheader from '@/components/currency/myHeader'
-import confirmationmessage from '@/components/confirmationmessage'
+import confirmationmessage from '@/components/currency/confirmationmessage'
 import upperMiddleMessageTips from '@/components/currency/upperMiddleMessageTips'
+import suspension from '@/components/home/suspension'
 import { selectClassification,addKind,getContentforKind,additionOrsubtractionStar } from '@/api/axios/utils'
 import { randomColors } from '@/api/simpleTools/utils'
 
 export default {
     name: 'home',
     components: {
-        myheader: myheader,
-        confirmationmessage: confirmationmessage,
-        upperMiddleMessageTips: upperMiddleMessageTips
+        myheader,
+        confirmationmessage,
+        upperMiddleMessageTips,
+        suspension
     },
     data() { 
         return {
@@ -140,10 +139,10 @@ export default {
             classificationbackups: [],
             kindOfadd: '',
             kind: '',
+            liactiveClass: 0,
             activekind: '',
             leftBoxul: '',
             middleloading: 'display:none',
-            liactiveClass: 0,
             middlecontent: '',
             noDateTips: '',
             isdeletekind: false
@@ -156,8 +155,8 @@ export default {
         
     },
     mounted() {
-        this.uname = this.$refs.headerChild.uname;
-        this.headimg = this.$refs.headerChild.headimg;
+        // this.uname = this.$refs.headerChild.uname;
+        // this.headimg = this.$refs.headerChild.headimg;
         // 获取myHeader组件内的uname（用户名）和headimg（用户头像）信息
         // console.log(this.$refs.homebody.getBoundingClientRect())
         // console.log(this.$refs.homebody.offsetTop)
@@ -172,6 +171,7 @@ export default {
             this.classification = a.split('**/');
             this.classificationbackups = a.split('**/');
             this.middleloading = '';
+            this.activekind = this.classificationbackups[0];
             getContentforKind(this.classificationbackups[0],this.uname).then( res => {
                 // var data = res.data[0].dateTim;
                 // console.log(data.split(' '));
@@ -206,8 +206,8 @@ export default {
                 console.log(this.middlecontent);
             })
         }).catch( error => {
-            this.headimg = require('../assets/nowifi.png');
-            this.$refs.headerChild.headimg = require('../assets/nowifi.png');
+            this.headimg = require('../assets/myheader/nowifi.png');
+            this.$refs.headerChild.headimg = require('../assets/myheader/nowifi.png');
             this.headpromptMsgleftbox = '请检查网络设置';
             this.promptbox = '';
             this.headpromptIsDisplayleftbox = true;
@@ -226,6 +226,7 @@ export default {
             })
         },
         showli(ev) {
+            // ev.stopPropagation();
             this.isdeletekind = false;
             // 当点击的时候禁止其他按钮点击
             this.leftBoxul = 'pointer-events:none';
@@ -233,8 +234,20 @@ export default {
             this.middlecontent = '';
             var ev = ev || window.event;
             var target = ev.target || ev.srcElement;
-            if(target.nodeName.toLowerCase() == 'a') {
-                var value = target.innerHTML.slice(target.innerHTML.lastIndexOf('>')+1);
+            if(target.nodeName === 'UL') {
+                // ul设置事件委托后，点击空白处出bug，没有找到解决方法，自行采用了这个方法，应该不是最优解决方案
+                console.log('点击了空白处')
+                this.middleloading = 'display:none';
+                this.leftBoxul = '';
+                this.isdeletekind = true;
+                ev.stopPropagation();
+            }else {
+                var value = ''
+                if(target.nodeName.toLowerCase() == 'a') {
+                    value = target.innerHTML.slice(target.innerHTML.lastIndexOf('>')+1);
+                }else if(target.nodeName.toLowerCase() == 'img') {
+                    value = target.alt
+                }
                 this.activekind = value;
                 var index = this.classification.indexOf(value);
                 this.liactiveClass = index;
@@ -270,7 +283,7 @@ export default {
                     this.middleloading = 'display:none';
                     this.leftBoxul = '';
                     this.isdeletekind = true;
-                })
+                })  
             }
         },
         classificationSearch() {
@@ -278,6 +291,9 @@ export default {
             if(this.kind == '') {
                 this.liactiveClass = this.classificationbackups.indexOf(this.activekind);
                 this.classification = this.classificationbackups;
+                console.log(this.classificationbackups.indexOf(this.activekind))
+                console.log(this.classificationbackups)
+                console.log(this.activekind)
             }else {
                 var _search = this.kind.toLowerCase();
                 var newclassification = [];
@@ -374,6 +390,20 @@ export default {
             this.confirmationmessage = '';
             this.confirmationmessagecl = 'visibility: visible;top: 30%;transition: all 0.3s linear;opacity: 1;';
             this.home = 'position:fixed;width:100%;';
+        },
+        confirmationmessageCancel(msg) {
+            this.confirmationmessage = 'visibility: hidden';
+            this.confirmationmessagecl = '';
+            this.home = '';
+            if(msg === 'mask' || msg === 'close' || msg === 'no') {
+                console.log(false)
+            }else if (msg === 'yes') {
+                console.log(true)
+                this.promptbox = '';
+                this.headPromptsucessleftbox = true;
+                this.headpromptIsDisplayleftbox = true;
+                this.headpromptMsgleftbox = '删除成功';
+            }
         }
     },
     computed:{
@@ -382,7 +412,7 @@ export default {
         }
     },
     watch: {
-        // test: {
+        // test: { 想要监听对象的话，需要设置深度查询
         //     handler:function(aaa) {
         //         console.log(aaa.a,2222)
         //     },
@@ -431,73 +461,6 @@ export default {
 .allbgcolor {
     background-color: #f6f8fa;
 }
-/* .external-headpromptleftbox {
-  position: absolute;
-  width: 100%;
-  height: 40px;
-  top: 10%;
-  display: flex;
-  display: -webkit-flex;
-  justify-content: center;
-  overflow: hidden;
-  z-index: 1000;
-} */
-/* .headpromptleftbox {
-  padding-left: 10px; 
-  box-sizing: border-box;
-  position: absolute;
-  height: 40px;
-  background-color: #ffdce0;
-  color: #86181d;
-  font-size: 0.8rem;
-  line-height: 40px;
-  border-radius: 5px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #ffdce0;
-  overflow: hidden;
-  transform: translateY(-100%);
-}
-.headpromptleftbox button {
-  outline: none;
-  background: rgba(0, 0, 0, 0);
-  cursor: pointer;
-  border: none;
-  color: #86181da6
-}
-.headpromptleftbox button:hover {
-  color: #86181d;
-} */
-/* .headpromptsucessleftbox {
-  padding-left: 10px; 
-  box-sizing: border-box;
-  position: absolute;
-  height: 40px;
-  background-color: #cbf7ae;
-  color: #16ad3c;
-  font-size: 0.8rem;
-  line-height: 40px;
-  border-radius: 5px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #d0f7b6;
-  overflow: hidden;
-  transform: translateY(-100%);
-}
-.headpromptsucessleftbox button {
-  outline: none;
-  background: rgba(0, 0, 0, 0);
-  cursor: pointer;
-  border: none;
-  color: #16ad3cb0;
-}
-.headpromptsucessleftbox button:hover {
-  color: #16ad3c;
-} */
-/* .headpromptdisplayleftbox {
-  transform: translateY(0);
-  transition: transform 0.6s;
-} */
 .home {
     width: 100%;
 }
@@ -528,7 +491,7 @@ header {
     max-height: 100vh;
     width: 20%;
     position: absolute;
-    overflow: scroll;
+    overflow: auto;
     background: #fff;
     border-right: 1px solid #e1e4e8!important;
 }
@@ -700,12 +663,13 @@ header {
     font-weight: 500;
     margin-bottom: 2%;
     height: 24px;
+    width: 100%;
 }
 .classificationContent li a {
     font-size: 1rem;
     font-weight: 500;
-    color: #0366d6;
     text-decoration: none;
+    display: block;
 }
 .classificationContent li a:hover {
     text-decoration: underline;
@@ -718,9 +682,11 @@ header {
     width: 1rem;
     margin-top: 4px;
 }
-.liactive {
-    border-radius: 50%;
-    background-color: #5ff382;
+.linoactive a {
+    color: #0366d6;
+}
+.liactive a {
+    color: #5ff382;
 }
 .isFixed {
     position: fixed;
@@ -748,6 +714,10 @@ header {
     margin: 1rem;
     animation: App-logo infinite 2s linear;
     /* infinite 动画循环无数次 linear 全程匀速 */
+}
+.suspensionbtn {
+    text-align: right;
+    margin-right: 5%;
 }
 @keyframes App-logo {
   from {
