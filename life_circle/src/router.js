@@ -32,10 +32,10 @@ export default new Router({
       component: (resolve) => require(['./views/author/AboutAuthor'],resolve)
     },
     {
-      path: '/confirmationmessage',
-      name: 'confirmationmessage',
+      path: '/submissionContents',
+      name: 'submissionContents',
       // component: () => import('./views/author/AboutAuthor')
-      component: (resolve) => require(['./components/currency/confirmationmessage'],resolve)
+      component: (resolve) => require(['./components/currency/submissionContents/submissionContents.vue'],resolve)
     },
     {path:'*',redirect: "/"}
   ]

@@ -100,8 +100,6 @@
 
 <script>
 import myheader from '@/components/currency/myHeader'
-import confirmationmessage from '@/components/currency/confirmationmessage'
-import upperMiddleMessageTips from '@/components/currency/upperMiddleMessageTips'
 import suspension from '@/components/home/suspension'
 import { selectClassification,addKind,getContentforKind,additionOrsubtractionStar } from '@/api/axios/utils'
 import { randomColors } from '@/api/simpleTools/utils'
@@ -110,8 +108,6 @@ export default {
     name: 'home',
     components: {
         myheader,
-        confirmationmessage,
-        upperMiddleMessageTips,
         suspension
     },
     data() { 

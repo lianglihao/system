@@ -11,10 +11,7 @@
 export default {
     data() {
         return {
-            // promptbox: 'z-index:-10',
-            // headpromptIsDisplayleftbox: false,
-            // headPromptsucessleftbox: false,
-            // headpromptMsgleftbox: '',
+
         }
     },
     props: {

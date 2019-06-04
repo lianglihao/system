@@ -17,11 +17,7 @@ export default {
         suspensionbtn: String
     },
     computed: {
-        // suspensionbtn() {
-        //     return {
-        //         background: '#f52e59'
-        //     }
-        // }
+
     }
 }
 </script>
@@ -34,7 +30,6 @@ export default {
     border: none;
     cursor: pointer;
     outline: none;
-    /*渐变效果,可以删掉这句话试试*/
     -webkit-transition: all 0.8s;
     transition: all 0.8s;
     margin-bottom: 5px;
@@ -50,14 +45,12 @@ export default {
     background-color: #f52e59;
 }
 .delete:hover {
-    /*发光*/
     background-color: #f54d71;
 }
 .add {
     background-color: #0091eb;
 }
 .add:hover {
-    /*发光*/
     background-color: #3aa6e9;
 }
 </style>
