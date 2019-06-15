@@ -113,7 +113,6 @@ $pb: 10px;
         text-align: left;
         overflow: hidden;
         backface-visibility: hidden;
-        // opacity: 0;
         opacity: 0;
         @media (max-width: 768px){
             width: 80%;

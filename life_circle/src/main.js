@@ -5,7 +5,9 @@ import store from './store'
 import './registerServiceWorker'
 const confirmationmessage = (resolve) => require(['@/components/currency/confirmationmessage'],resolve)
 const upperMiddleMessageTips = (resolve) => require(['@/components/currency/upperMiddleMessageTips'],resolve)
+import MessageBox from '@/components/currency/messageBox/index';
 
+Vue.use(MessageBox);
 Vue.component('confirmationmessage', confirmationmessage)
 Vue.component('upperMiddleMessageTips', upperMiddleMessageTips)
 

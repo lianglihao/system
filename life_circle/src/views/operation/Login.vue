@@ -128,6 +128,17 @@ export default {
       }
     },
     login() {
+      this.$msgBox.showMsgBox({
+          title: '添加分类',
+          content: '请填写分类名称',
+          isShowInput: true
+      }).then(async (val) => {
+          // ... 
+          console.log(val)       
+      }).catch((val) => {
+          // ...
+          console.log(val)       
+      });    
       if(this.loginUname == '' || this.loginUname == null || this.loginUpassword == ''){
         this.headprompt = 'headprompt';
         this.headpromptIsDisplay = true;
