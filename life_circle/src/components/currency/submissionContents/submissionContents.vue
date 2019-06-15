@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$pb: 10px;
+$pbten: 10px;
 @mixin button {
     font-size: 12px;
     cursor: pointer;
@@ -128,7 +128,7 @@ $pb: 10px;
             flex-direction: column;
             font-size: 16px;
             .title {
-                padding-bottom: $pb;
+                padding-bottom: $pbten;
                 font-weight: 600;
                 display: flex;
                 justify-content: space-between;
@@ -144,7 +144,7 @@ $pb: 10px;
                 }
             }
             .msg {
-                padding-bottom: $pb;
+                padding-bottom: $pbten;
                 color: #606266;
                 font-size: 12px;
                 display: flex;
