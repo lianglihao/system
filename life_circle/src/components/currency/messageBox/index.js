@@ -25,6 +25,7 @@ MessageBox.install = function (Vue, options) {
         currentMsg.content = options;
       } else if (typeof options === 'object') {
         Object.assign(currentMsg, options);
+        // Object.assign es6 语法，将后面的合并到前面，若是相同后面覆盖前面
         console.log(currentMsg)
       }
       console.log(currentMsg.showMsgBox())
