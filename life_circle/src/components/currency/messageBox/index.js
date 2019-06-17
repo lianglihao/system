@@ -27,7 +27,6 @@ MessageBox.install = function (Vue, options) {
         Object.assign(currentMsg, options);
         console.log(currentMsg)
       }
-      console.log(currentMsg.showMsgBox())
       return currentMsg.showMsgBox()
         .then(val => {
           currentMsg = null;

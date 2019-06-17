@@ -35,7 +35,7 @@ export default new Router({
       path: '/submissionContents',
       name: 'submissionContents',
       // component: () => import('./views/author/AboutAuthor')
-      component: (resolve) => require(['./components/currency/submissionContents/submissionContents.vue'],resolve)
+      component: (resolve) => require(['./components/currency/message/index.vue'],resolve)
     },
     {path:'*',redirect: "/"}
   ]

@@ -131,7 +131,8 @@ export default {
       this.$msgBox.showMsgBox({
           title: '添加分类',
           content: '请填写分类名称',
-          isShowInput: true
+          isShowInput: true,
+          placeholder: '请输入'
       }).then(async (val) => {
           // ... 
           console.log(val)       

@@ -1,5 +1,5 @@
 <template>
-  <div class="message-box" v-show="isShowMessageBox">
+  <div class="message-box" >
     <div class="mask" @click="cancel"></div>
     <div class="message-content" :style="animation">
       <!--<svg class="icon" aria-hidden="true" @click="cancel">
@@ -8,7 +8,7 @@
       <h3 class="title">{{ title }}</h3>
       <p class="content">{{ content }}</p>
       <div>
-        <input type="text" v-model="inputValue" v-if="isShowInput" ref="input" @keyup.enter="confirm">
+        <input type="text" v-model="inputValue" :placeholder="placeholder" v-if="isShowInput" ref="input" @keyup.enter="confirm">
       </div>
       <div class="btn-group">
         <button class="btn-default" @click="cancel" v-show="isShowCancelBtn" :disabled="isDisable">{{ cancelBtnText }}</button>
@@ -29,8 +29,14 @@ export default {
       type: String,
       default: '这是弹框内容'
     },
-    isShowInput: false,
-    inputValue: '',
+    isShowInput: {
+      type: Boolean,
+      default: false
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
     isShowCancelBtn: {
       type: Boolean,
       default: true
@@ -50,7 +56,7 @@ export default {
   },
   data () {
     return {
-      isShowMessageBox: false,
+      inputValue: '',
       resolve: '',
       reject: '',
       promise: '', // 保存promise对象
@@ -62,9 +68,8 @@ export default {
   methods: {
     // 确定,将promise断定为resolve状态
     confirm: function () {
-      // this.isShowMessageBox = false;
       this.isDisable = true
-      if (this.isShowInput) {
+      if (this.inputValue !== '') {
         this.resolve(this.inputValue);
       } else {
         this.resolve('confirm');
@@ -81,12 +86,7 @@ export default {
       }
     },
     showMsgBox: function () {
-      this.isShowMessageBox = true;
-      setTimeout(()=>{
-        this.$nextTick(()=> {
-          this.animation = 'visibility: visible;top: 40%;transform: translate(-50%, -40%); transition: all 0.2s linear;opacity: 1;'
-        })
-      },0) 
+      this.animation = 'visibility: visible;top: 40%;transform: translate(-50%, -40%); transition: all 0.2s linear;opacity: 1;'
       this.promise = new Promise((resolve, reject) => {
         this.resolve = resolve;
         this.reject = reject;
@@ -97,27 +97,21 @@ export default {
     remove: function () {
       this.animation = 'visibility: visible;top: 30%;transition: all .2s linear;opacity: 0;'
       setTimeout(() => {
-        this.$nextTick(()=> {
-          this.isShowMessageBox = false
           this.$destroy();
           document.body.removeChild(this.$el);
           this.iscancel = false
           this.isDisable = false
-        })
       }, 200);
     },
-    destroy: function () {
-      this.$destroy();
-      document.body.removeChild(this.$el);
-    }
+    // destroy: function () {
+    //   this.$destroy();
+    //   document.body.removeChild(this.$el);
+    // }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@keyframes comein {
-
-}
 .message-box {
   position: relative;
   .mask {
