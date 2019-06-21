@@ -29,6 +29,8 @@ export default {
   mounted() {
       setTimeout(() => {
           this.animation = 'message_enter'
+          this.$destroy()
+          document.body.removeChild(this.$el)
       },1000)
   }
 }
