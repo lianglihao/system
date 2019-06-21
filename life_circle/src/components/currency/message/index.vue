@@ -27,10 +27,13 @@ export default {
 
   },
   mounted() {
+      this.animation = 'message_enter'
       setTimeout(() => {
-          this.animation = 'message_enter'
-          this.$destroy()
-          document.body.removeChild(this.$el)
+          this.animation = ''
+          setTimeout(() => {
+            this.$destroy()
+            document.body.removeChild(this.$el)
+          },400)
       },1000)
   }
 }
