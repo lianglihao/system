@@ -2,9 +2,6 @@
   <div class="message-box" >
     <div class="mask" @click="cancel"></div>
     <div class="message-content" :style="animation">
-      <!--<svg class="icon" aria-hidden="true" @click="cancel">
-        <use xlink:href="#icon-delete"></use>
-      </svg>-->
       <h3 class="title">{{ title }}</h3>
       <p class="content">{{ content }}</p>
       <div>
@@ -112,6 +109,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@mixin button {
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 28px;
+    width: 50px;
+    outline: none;
+}
 .message-box {
   position: relative;
   .mask {
@@ -130,17 +135,10 @@ export default {
     border-radius: 0.4em;
     background: #fff;
     z-index: 50001;
-    .icon {
-      position: absolute;
-      top: 1em;
-      right: 1em;
-      width: 0.9em;
-      height: 0.9em;
-      color: #878d99;
-      cursor: pointer;
-      &:hover {
-        color: red;
-      }
+    @media (max-width: 36em){
+      min-width: 85%;
+      max-width: 85%;
+      margin: 0 auto;
     }
     .title {
       font-size: 1.2em;
@@ -167,13 +165,37 @@ export default {
       outline: none;
       padding: 0 1em;
       &:focus {
-        border-color: red;
+        border-color: rgb(248, 212, 218);
       }
     }
     .btn-group {
       margin-top: 1em;
       float: right;
       overflow: hidden;
+      .btn-default {
+        background: #fff;
+        border: 1px solid #dcdfe6;
+        color: #606266;
+        @include button;
+        &:hover {
+            color:#409eff;
+            border: 1px solid #c6e2ff;
+            background-color:#ecf5ff;
+            transition: .2s;
+        }
+      }
+      .btn-primary {
+        color: #fff;
+        background-color: #409eff;
+        border: 1px solid #409eff;
+        @include button;
+        &:hover {
+            background-color: #66b1ff;
+            border: 1px solid #66b1ff;
+            color:#fff;
+            transition: .2s;
+        }
+      }
       .btn-confirm {
         margin-left: 1em;
       }
