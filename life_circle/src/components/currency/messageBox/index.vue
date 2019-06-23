@@ -83,7 +83,7 @@ export default {
       }
     },
     showMsgBox: function () {
-      this.animation = 'visibility: visible;top: 40%;transform: translate(-50%, -40%); transition: all 0.2s linear;opacity: 1;'
+      this.animation = 'visibility: visible;top: 40%;transform: translate(-50%, -40%); transition: all .3s linear;opacity: 1;'
       this.promise = new Promise((resolve, reject) => {
         this.resolve = resolve;
         this.reject = reject;
@@ -92,7 +92,7 @@ export default {
       return this.promise;
     },
     remove: function () {
-      this.animation = 'visibility: visible;top: 30%;transition: all .2s linear;opacity: 0;'
+      this.animation = 'visibility: visible;top: 30%;transition: all .3s linear;opacity: 0;'
       setTimeout(() => {
           this.$destroy();
           document.body.removeChild(this.$el);

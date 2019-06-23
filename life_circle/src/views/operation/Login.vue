@@ -11,12 +11,6 @@
           <h1><router-link :to="{path:'/author/aboutauthor'}">关于作者</router-link></h1>
         </div>
       </div>
-      <div class="external-headprompt">
-        <div class="headprompt" :class="{headpromptdisplay:headpromptIsDisplay,headpromptsucess:headPromptsucess}">
-          <span>{{headpromptMsg}}</span>
-          <button @click="closeHeadprompt">X</button>
-        </div>
-      </div>
       <div class="login-middle">
         <div class="login-middle-title">
           <h1>记录学习、记录美好生活</h1>
@@ -87,10 +81,7 @@ export default {
   },
   data() {
     return {
-      headPromptsucess: false,
       LoginRegistration: '注册',
-      headpromptIsDisplay: false,
-      headpromptMsg: '',
       disabled: false,
       registclass: '',
       registLoding: '',
@@ -140,9 +131,6 @@ export default {
           console.log(val)       
       });    
       if(this.loginUname == '' || this.loginUname == null || this.loginUpassword == ''){
-        this.headprompt = 'headprompt';
-        this.headpromptIsDisplay = true;
-        this.headpromptMsg = 'account or password cannot be empty.';
         if(this.loginUname == '' || this.loginUname == null) {
           this.$refs.loginUname.focus();
           //配合input标签ref属性使用
@@ -160,9 +148,6 @@ export default {
             // console.log(1);
             this.$router.replace({name:"home"});
           }else {
-            this.headprompt = 'headprompt';
-            this.headpromptIsDisplay = true;
-            this.headpromptMsg = 'Incorrect username or password.';
             this.disabled = false;
             this.loginLoding = '';
             this.loginBtn.opacity = '';
@@ -180,9 +165,6 @@ export default {
     },
     regist() {
       if(this.registUname == '' || this.registAccountnumber == '' || this.registUpassword == '') {
-        this.headprompt = 'headprompt';
-        this.headpromptIsDisplay = true;
-        this.headpromptMsg = '请完善注册账号所需的信息';
         if(this.registUname == '') {
           this.$refs.registUname.focus();
         }else if(this.registAccountnumber == '') {
@@ -200,26 +182,17 @@ export default {
           console.log(res);
           if(res == '用户名已被注册') {
             this.$refs.registUname.focus();
-            this.headprompt = 'headprompt';
-            this.headpromptIsDisplay = true;
-            this.headpromptMsg = '用户名已被注册';
             that.disabled = false;
             this.loginLoding = '';
             this.loginBtn.opacity = '';
             this.loginBtn.backgroundColor = '';
           }else if(res == '账号已被注册') {
             this.$refs.registAccountnumber.focus();
-            this.headprompt = 'headprompt';
-            this.headpromptIsDisplay = true;
-            this.headpromptMsg = '账号已被注册';
             that.disabled = false;
             this.loginLoding = '';
             this.loginBtn.opacity = '';
             this.loginBtn.backgroundColor = '';
           }else if(res == true) {
-            this.headPromptsucess = true;
-            this.headpromptIsDisplay = true;
-            this.headpromptMsg = '注册成功';
             localStorage.setItem('accountnumber',this.registAccountnumber);
             this.loginUname = localStorage.getItem('accountnumber');
             this.LoginRegistration = '注册';
@@ -235,24 +208,10 @@ export default {
           }
         })
       }
-    },
-    closeHeadprompt() {
-      this.headpromptIsDisplay = false;
     }
   },
   watch: {
-    headpromptIsDisplay: function() {
-      if(this.headpromptIsDisplay == true) {
-        setTimeout( () => {
-          this.headpromptIsDisplay = false;
-        },2000)
-        if(this.headPromptsucess == true) {
-          setTimeout( () => {
-          this.headPromptsucess = false;
-        },2000)
-        }
-      }
-    }
+
   },
   beforeRouteEnter:(to,from,next) => {
       var isLogin = localStorage.getItem("isLogin")
@@ -266,75 +225,6 @@ export default {
 </script>
 
 <style scoped>
-.external-headprompt {
-  position: absolute;
-  width: 100%;
-  height: 40px;
-  top: 10%;
-  display: flex;
-  display: -webkit-flex;
-  justify-content: center;
-  overflow: hidden;
-}
-.headprompt {
-  padding-left: 10px; 
-  box-sizing: border-box;
-  position: absolute;
-  height: 40px;
-  background-color: #ffdce0;
-  color: #86181d;
-  font-size: 0.8rem;
-  line-height: 40px;
-  border-radius: 5px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #ffdce0;
-  overflow: hidden;
-  transform: translateY(-100%);
-}
-.headprompt button {
-  /* margin-left: 7%; */
-  margin-top: 5%;
-  outline: none;
-  background: rgba(0, 0, 0, 0);
-  cursor: pointer;
-  border: none;
-  color: rgba(134,24,29,0.9);
-}
-.headprompt button:hover {
-  color: #86181d;
-}
-.headpromptsucess {
-  padding-left: 10px; 
-  box-sizing: border-box;
-  position: absolute;
-  height: 40px;
-  background-color: #cbf7ae;
-  color: #16ad3c;
-  font-size: 0.8rem;
-  line-height: 40px;
-  border-radius: 5px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #d0f7b6;
-  overflow: hidden;
-  transform: translateY(-100%);
-}
-.headpromptsucess button {
-  /* margin-left: 7%; */
-  outline: none;
-  background: rgba(0, 0, 0, 0);
-  cursor: pointer;
-  border: none;
-  color: rgba(22,173,60,0.69);
-}
-.headpromptsucess button:hover {
-  color: #16ad3c;
-}
-.headpromptdisplay {
-  transform: translateY(0);
-  transition: transform 0.6s;
-}
 .login {
   height: 100vh;
   width: 100%;

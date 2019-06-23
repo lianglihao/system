@@ -1,10 +1,8 @@
 <template>
     <div class="home" :style="home">
-        <confirmationmessage :style="confirmationmessage" :confirmationmessagecl="confirmationmessagecl" v-on:confirmationmessageCancel="confirmationmessageCancel"></confirmationmessage>
         <header>
             <myheader ref="headerChild" v-bind="head" v-on:headhanbao="headhanbaoshow"></myheader>
         </header>
-        <upperMiddleMessageTips :promptbox="promptbox" :headpromptIsDisplayleftbox="headpromptIsDisplayleftbox" :headPromptsucessleftbox="headPromptsucessleftbox" :headpromptMsgleftbox="headpromptMsgleftbox" v-on:closeHeadpromptleftbox="closeHeadpromptleftbox"></upperMiddleMessageTips>
         <div class="home-body allbgcolor" ref="homebody">
             <div class="home-body-left" id="boxFixed" :class="{'isFixed':isFixed}">
                 <div class="left-box">
@@ -118,13 +116,7 @@ export default {
                 aboutauthor: '关于作者'
             },
             home: '',
-            confirmationmessage: 'visibility: hidden',
-            confirmationmessagecl: '',
-            promptbox: 'z-index:-10',//解决头部提示，占用页面无法点击input框的bug
             headuseravaterunamerightmsg: '',
-            headpromptMsgleftbox: '',
-            headpromptIsDisplayleftbox: false,
-            headPromptsucessleftbox: false,
             uname: localStorage.getItem('uname'),
             headimg: localStorage.getItem('headimg'),
             isLogin: localStorage.getItem('isLogin'),
@@ -204,9 +196,6 @@ export default {
         }).catch( error => {
             this.headimg = require('../assets/myheader/nowifi.png');
             this.$refs.headerChild.headimg = require('../assets/myheader/nowifi.png');
-            this.headpromptMsgleftbox = '请检查网络设置';
-            this.promptbox = '';
-            this.headpromptIsDisplayleftbox = true;
         })
     },
     methods: {
@@ -311,18 +300,12 @@ export default {
         },
         addClassification() {
             if(this.kindOfadd == ''){
-                this.promptbox = '';
-                this.headpromptMsgleftbox = '请输入需要添加的类别'
-                this.headpromptIsDisplayleftbox = true;
                 this.$refs.addclassification.focus();
             }else {
                 var result = this.classificationbackups.filter( item => {
                     return item == this.kindOfadd;
                 })
                 if(result != null && result.length > 0) {
-                    this.promptbox = '';
-                    this.headpromptMsgleftbox = '已经存在与新增相同类别'
-                    this.headpromptIsDisplayleftbox = true;
                     this.$refs.addclassification.focus();
                 }else {
                     var oldclassificationbackups = this.classificationbackups;
@@ -332,26 +315,15 @@ export default {
                         console.log(res.status);
                         if(res.status = 200) {
                             this.classification = this.classificationbackups;
-                            this.promptbox = '';
-                            this.headPromptsucessleftbox = true;
-                            this.headpromptIsDisplayleftbox = true;
-                            this.headpromptMsgleftbox = '增加新类别成功';
                             this.classificationADDonclick = false;
                             console.log('success');
                         }else {
                             this.classificationbackups = oldclassificationbackups;
-                            this.promptbox = '';
-                            this.headpromptIsDisplayleftbox = true;
-                            this.headpromptMsgleftbox = '由于网络波动或其他原因，请求失败';
                             this.$refs.addclassification.focus();
                         }
                     })
                 }
             }
-        },
-        closeHeadpromptleftbox() {
-            this.promptbox = 'z-index:-10';
-            this.headpromptIsDisplayleftbox = false;
         },
         starorunstar(index) {
             // 点击喜欢或者取消喜欢
@@ -383,23 +355,7 @@ export default {
             }
         },
         deletekind() {
-            this.confirmationmessage = '';
-            this.confirmationmessagecl = 'visibility: visible;top: 30%;transition: all 0.3s linear;opacity: 1;';
             this.home = 'position:fixed;width:100%;';
-        },
-        confirmationmessageCancel(msg) {
-            this.confirmationmessage = 'visibility: hidden';
-            this.confirmationmessagecl = '';
-            this.home = '';
-            if(msg === 'mask' || msg === 'close' || msg === 'no') {
-                console.log(false)
-            }else if (msg === 'yes') {
-                console.log(true)
-                this.promptbox = '';
-                this.headPromptsucessleftbox = true;
-                this.headpromptIsDisplayleftbox = true;
-                this.headpromptMsgleftbox = '删除成功';
-            }
         }
     },
     computed:{
@@ -423,20 +379,6 @@ export default {
             // console.log(this.test.a,111)
             // 监听搜索框输入的变化，调用classificationSearch()方法进行模糊查询分类
             this.classificationSearch();
-        },
-        headpromptIsDisplayleftbox: function() {
-            if(this.headpromptIsDisplayleftbox == true) {
-                setTimeout( () => {
-                    this.promptbox = 'z-index:-10';
-                    this.headpromptIsDisplayleftbox = false;
-                },2000)
-            if(this.headPromptsucessleftbox == true) {
-                setTimeout( () => {
-                    this.promptbox = 'z-index:-10';
-                    this.headPromptsucessleftbox = false;
-                },2000)
-                }
-            }
         }
     },
     beforeRouteEnter:(to,from,next) => {

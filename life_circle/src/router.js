@@ -31,12 +31,6 @@ export default new Router({
       // component: () => import('./views/author/AboutAuthor')
       component: (resolve) => require(['./views/author/AboutAuthor'],resolve)
     },
-    {
-      path: '/submissionContents',
-      name: 'submissionContents',
-      // component: () => import('./views/author/AboutAuthor')
-      component: (resolve) => require(['./components/currency/message/index.vue'],resolve)
-    },
     {path:'*',redirect: "/"}
   ]
 })
