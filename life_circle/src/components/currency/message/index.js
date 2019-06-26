@@ -21,4 +21,5 @@ MessageJk.install = function (Vue, options) {
     }
     Vue.prototype.$messageJk = showMessageJk
 }
+
 export default MessageJk

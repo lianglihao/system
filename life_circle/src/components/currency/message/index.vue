@@ -1,5 +1,5 @@
 <template>
-    <div class="message" :class="[animation, type]">
+    <div class="message" :class="[type, animation]" @mouseover="mouseover" @mouseout="mouseout">
         <i :class="'icon-'+type"></i>
         <p class="msg">{{msg}}</p>
     </div>
@@ -10,7 +10,8 @@ export default {
   name: 'JacksonMessage',
   data () {
       return {
-          animation:''
+          animation: '',
+          set_time: null
       }
   },
   props: {
@@ -24,17 +25,26 @@ export default {
       }
   },
   methods: {
-
+      mouseover () {
+          clearTimeout(this.set_time)
+          this.set_time = null
+      },
+      mouseout () {
+          this.setTimer()
+      },
+      setTimer () {
+        this.animation = 'message_enter'
+        this.set_time = setTimeout(() => {
+            this.animation = ''
+            setTimeout(() => {
+                this.$destroy()
+                document.body.removeChild(this.$el)
+            },400)
+        },1000)
+      }
   },
-  mounted() {
-      this.animation = 'message_enter'
-      setTimeout(() => {
-          this.animation = ''
-          setTimeout(() => {
-            this.$destroy()
-            document.body.removeChild(this.$el)
-          },400)
-      },1000)
+  mounted () {
+      this.setTimer()
   }
 }
 </script>
@@ -63,6 +73,7 @@ export default {
     display:flex;
     align-items:center;
     opacity: 0;
+    box-shadow:gray 0px 0px 5px;
     @media (max-width: 420px){
         min-width: 0;
         max-width: 80%;
@@ -97,10 +108,6 @@ export default {
     background-color:#f0f9eb;
     border-color:#e1f3d8;
     color:#67c23a;
-}
-
-.info {
-    color:#909399;
 }
 
 .warn {

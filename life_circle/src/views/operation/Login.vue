@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <div class="content">
+
       <div class="login-header">
         <div class="left">
           <img src="../../assets/draw.png" alt="">
@@ -11,6 +12,7 @@
           <h1><router-link :to="{path:'/author/aboutauthor'}">关于作者</router-link></h1>
         </div>
       </div>
+
       <div class="login-middle">
         <div class="login-middle-title">
           <h1>记录学习、记录美好生活</h1>
@@ -119,17 +121,20 @@ export default {
       }
     },
     login() {
-      // this.$messageJk('你好')
-      this.$msgBox({
-          title: '添加分类',
-          content: '请填写分类名称',
-          isShowInput: true,
-          placeholder: '请输入'
-      }).then(async (val) => {
-          console.log(val)       
-      }).catch((val) => {
-          console.log(val)       
-      });    
+      this.$messageJk({
+        msg: '密码错误',
+        type: 'success'
+      })
+      // this.$msgBox({
+      //     title: '添加分类',
+      //     content: '请填写分类名称',
+      //     isShowInput: true,
+      //     placeholder: '请输入'
+      // }).then(async (val) => {
+      //     console.log(val)       
+      // }).catch((val) => {
+      //     console.log(val)       
+      // });    
       if(this.loginUname == '' || this.loginUname == null || this.loginUpassword == ''){
         if(this.loginUname == '' || this.loginUname == null) {
           this.$refs.loginUname.focus();
@@ -264,7 +269,7 @@ export default {
   display: -webkit-flex;
   flex-direction: row;
   justify-content: space-between;
-  flex-wrap: wrap;
+  /*flex-wrap: wrap;*/
   align-items: center;
 }
 .left h1 {
@@ -666,5 +671,14 @@ span {
     .formregist {
       width: 100%;
     }
+}
+/*适配iphone5;*/
+@media screen and (max-width: 320px) { 
+  .login-header .right button{
+    width: 4rem;
+  }
+  .login-middle-title h1 {
+    margin-top: 15%;
+  }
 }
 </style>

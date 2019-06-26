@@ -9,7 +9,7 @@ module.exports = {
         }
     },
     devServer: {
-        open: true,
+        // open: true,
         //配置跨域
         proxy: {
             '/api': {

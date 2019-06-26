@@ -355,7 +355,12 @@ export default {
             }
         },
         deletekind() {
-            this.home = 'position:fixed;width:100%;';
+            // this.home = 'position:fixed;width:100%;';
+            console.log('点击删除')
+            this.$messageJk({
+                msg: '密码错误',
+                type: 'success'
+            })
         }
     },
     computed:{
