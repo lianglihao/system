@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { setTimeout, clearTimeout } from 'timers';
 export default {
   name: 'JacksonMessage',
   data () {
@@ -25,15 +26,14 @@ export default {
       }
   },
   methods: {
-      mouseover () {
-          clearTimeout(this.set_time)
-          this.set_time = null
-      },
-      mouseout () {
-          this.setTimer()
-      },
-      setTimer () {
-        this.animation = 'message_enter'
+    mouseover () {
+        clearTimeout(this.set_time)
+        this.set_time = null
+    },
+    mouseout () {
+        this.setTimer()
+    },
+    setTimer () {
         this.set_time = setTimeout(() => {
             this.animation = ''
             setTimeout(() => {
@@ -41,10 +41,13 @@ export default {
                 document.body.removeChild(this.$el)
             },400)
         },1000)
-      }
+    }
   },
   mounted () {
-      this.setTimer()
+    setTimeout(() => {
+        this.animation = 'message_enter'
+        this.setTimer()
+    },50)
   }
 }
 </script>
@@ -60,12 +63,11 @@ export default {
     max-width: 380px;
     box-sizing:border-box;
     border-radius:4px;
-    border:1px solid #ebeef5;
+    border:1px solid;
     position:fixed;
     left:50%;
     top:0px;
     transform:translateX(-50%);
-    background-color:#edf2fc;
     // transition:opacity .3s,transform .4s,top .4s;
     transition: all 0.4s;
     overflow:hidden;
@@ -102,6 +104,12 @@ export default {
         background: url('../../../assets/currency/message_img/warn.png') no-repeat center;
         @include icon;
     }
+}
+
+.info {
+    background-color:#edf2fc;
+    border-color: #ebeef5;
+    color: black;
 }
 
 .success {

@@ -51,7 +51,7 @@
                 </div>
                 <div class="suspensionbtn" v-show="isdeletekind">
                     <suspension suspensionbtn='delete' @click.native="deletekind" style="margin-right:10px;">删除分类</suspension>
-                    <suspension suspensionbtn='add'>新的分享</suspension>
+                    <suspension suspensionbtn='add' @click.native="add">新的分享</suspension>
                 </div>
                 <div v-if="middlecontent == ''" class="middleTitle">
                     <p>{{noDateTips}}</p>
@@ -361,6 +361,12 @@ export default {
                 msg: '密码错误',
                 type: 'success'
             })
+        },
+        add () {
+            this.$messageJk({
+                msg: '密码正确',
+                type: 'fail'
+            })
         }
     },
     computed:{
@@ -406,6 +412,7 @@ export default {
 }
 .home {
     width: 100%;
+    height: 100%;
 }
 header {
     background-color: #00B4FF;

@@ -6,10 +6,10 @@ MessageJk.install = function (Vue, options) {
     let currentMessage
     const initInstance = () => {
         currentMessage = new MessageJkInstance()
-        currentMessage.id = 'messageJk' + id++
         let messageEl = currentMessage.$mount().$el
         document.body.appendChild(messageEl)
         messageEl.style.zIndex = id + 1000
+        messageEl.id = 'messageJk' + id++
     }
     function showMessageJk (options) {
         initInstance()
