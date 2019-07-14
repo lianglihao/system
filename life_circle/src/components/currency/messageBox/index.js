@@ -4,9 +4,11 @@ import msgboxVue from './index.vue';
 const MessageBox = {};
 // vue的install方法，用于定义vue插件
 MessageBox.install = function (Vue, options) {
+  console.log(123)
   const MessageBoxInstance = Vue.extend(msgboxVue);
   let currentMsg;
   const initInstance = () => {
+    console.log(123)
     // 实例化vue实例
     currentMsg = new MessageBoxInstance();
     // console.log(currentMsg)
@@ -15,6 +17,7 @@ MessageBox.install = function (Vue, options) {
     document.body.appendChild(msgBoxEl);
   };
   function showMsgBox (options) {
+    console.log(123)
     if (!currentMsg) {
       initInstance();
     }

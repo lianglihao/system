@@ -729,9 +729,9 @@ header {
     margin-top: 0.5rem;
     width: 100%;
 }
-.middleTitlerightTop {
+/* .middleTitlerightTop {
     
-}
+} */
 .middleTitlerightMiddle {
     background-color: #fff;
     border: 1px solid #d1d5da;

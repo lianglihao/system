@@ -67,22 +67,28 @@
         </div>
       </div>
       <myfooter></myfooter>
+      <!-- <div v-for="(value,key,index) in testObj" :key="index">
+        {{key}}:{{value}}
+      </div>
+      <button @click="test">添加属性</button> -->
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import myfooter from '@/components/currency/myFooter'
+
 import { Userlogin,Userregistration } from '@/api/axios/utils'
+
 
 export default {
   name: 'Login',
   components: {
-    myfooter: myfooter
+    myfooter: resolve => {require(['@/components/currency/myFooter'],resolve)}
   },
   data() {
     return {
+      // testObj:{},
       LoginRegistration: '注册',
       disabled: false,
       registclass: '',
@@ -101,7 +107,14 @@ export default {
       registUpassword: ''
     }
   },
+  created () {
+    this.testObj = {a:1}
+  },
   methods: {
+    // test () {
+    //   this.$set(this.testObj,'b',2)
+    //   console.log(this.testObj)
+    // },
     change() {
       if(this.LoginRegistration == '注册'){
         this.LoginRegistration = '登录';
