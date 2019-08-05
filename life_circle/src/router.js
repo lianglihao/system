@@ -11,7 +11,10 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        requireAuth: true
+      } // meta 内 定义进入该路由的时候是否需要进行验证是否登陆等等场景
     },
     {
       path: '/person/:uname',

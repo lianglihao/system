@@ -392,14 +392,14 @@ export default {
             this.classificationSearch();
         }
     },
-    beforeRouteEnter:(to,from,next) => {
-        var isLogin = localStorage.getItem("isLogin")
-        if(isLogin == "isLogin"){
-            next();
-        }else{
-            next('/opeartion/login');
-        }
-    },
+    // beforeRouteEnter:(to,from,next) => {
+    //     var isLogin = localStorage.getItem("isLogin")
+    //     if(isLogin == "isLogin"){
+    //         next();
+    //     }else{
+    //         next('/opeartion/login');
+    //     }
+    // },
     destroyed () {
       window.removeEventListener('scroll', this.handleScroll)
     },

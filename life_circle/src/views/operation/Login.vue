@@ -164,6 +164,7 @@ export default {
           // console.log(res);
           if(res == true) {
             // console.log(1);
+            // 不会向history里添加新记录，点击浏览器返回返回的是上上页
             this.$router.replace({name:"home"});
           }else {
             this.disabled = false;
