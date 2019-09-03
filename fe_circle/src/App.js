@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from './router'
 
 function Welcome(props) {
   return <h1>Hello, {props.name}</h1>
@@ -6,8 +7,9 @@ function Welcome(props) {
 function App() {
   return (
     <div className="App">
+      {/* <Home /> */}
       <Welcome name="Sara" />
-      <Welcome name="Cahal" />
+      <Router />
       <Welcome name="Edite" />
     </div>
   );
